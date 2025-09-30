@@ -16,7 +16,7 @@ void main() {
 
     // 앱 제목이 표시되는지 확인합니다.
     expect(find.text('웹툰 다이어리'), findsOneWidget);
-    
+
     // 환영 메시지가 표시되는지 확인합니다.
     expect(find.text('웹툰 다이어리에 오신 것을 환영합니다!'), findsOneWidget);
     expect(find.text('AI를 활용해 일상을 4컷 만화로 만들어보세요'), findsOneWidget);
@@ -31,10 +31,10 @@ void main() {
 
     // AppBar가 있는지 확인합니다.
     expect(find.byType(AppBar), findsOneWidget);
-    
+
     // Scaffold가 있는지 확인합니다.
     expect(find.byType(Scaffold), findsOneWidget);
-    
+
     // Center 위젯이 있는지 확인합니다 (최소 1개).
     expect(find.byType(Center), findsAtLeastNWidgets(1));
   });

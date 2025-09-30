@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // 환경 변수 로드
   try {
     await dotenv.load(fileName: "config.env");
@@ -11,7 +11,7 @@ void main() async {
     // 개발 모드에서는 환경 변수 파일이 없어도 계속 진행
     // Environment file not found, continuing in development mode
   }
-  
+
   runApp(const WebtoonDiaryApp());
 }
 

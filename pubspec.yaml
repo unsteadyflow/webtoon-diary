@@ -1,0 +1,53 @@
+name: webtoon_diary
+description: "AI를 활용해 사용자의 일상을 4컷 만화로 자동 변환하는 다이어리 앱"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI 및 아이콘
+  cupertino_icons: ^1.0.8
+  
+  # 상태 관리
+  provider: ^6.1.2
+  
+  # HTTP 통신
+  http: ^1.2.2
+  dio: ^5.7.0
+  
+  # Supabase
+  supabase_flutter: ^2.8.0
+  
+  # 로컬 저장소
+  shared_preferences: ^2.3.2
+  sqflite: ^2.4.0
+  
+  # 이미지 처리
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+  
+  # 유틸리티
+  intl: ^0.19.0
+  uuid: ^4.5.1
+  
+  # 환경 변수
+  flutter_dotenv: ^5.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # Assets
+  assets:
+    - assets/images/
+    - assets/icons/

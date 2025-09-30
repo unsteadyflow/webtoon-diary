@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'services/supabase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +11,14 @@ void main() async {
   } catch (e) {
     // 개발 모드에서는 환경 변수 파일이 없어도 계속 진행
     // Environment file not found, continuing in development mode
+  }
+
+  // Supabase 초기화
+  try {
+    await SupabaseService.initialize();
+  } catch (e) {
+    // Supabase 초기화 실패 시에도 앱은 계속 실행
+    // Initialization failed, continuing without Supabase
   }
 
   runApp(const WebtoonDiaryApp());

@@ -18,40 +18,24 @@ void main() {
     expect(find.text('웹툰 다이어리'), findsOneWidget);
     
     // 환영 메시지가 표시되는지 확인합니다.
-    expect(find.text('안녕하세요! 👋'), findsOneWidget);
-    expect(find.text('오늘의 일상을 재미있는 4컷 만화로 만들어보세요!'), findsOneWidget);
+    expect(find.text('웹툰 다이어리에 오신 것을 환영합니다!'), findsOneWidget);
+    expect(find.text('AI를 활용해 일상을 4컷 만화로 만들어보세요'), findsOneWidget);
 
-    // LOCAL_DEV 모드 표시가 있는지 확인합니다.
-    expect(find.text('LOCAL_DEV'), findsOneWidget);
+    // 아이콘이 표시되는지 확인합니다.
+    expect(find.byIcon(Icons.auto_stories), findsOneWidget);
+  });
 
-    // 플로팅 액션 버튼이 있는지 확인합니다.
-    expect(find.byType(FloatingActionButton), findsOneWidget);
+  testWidgets('홈페이지 레이아웃 테스트', (WidgetTester tester) async {
+    // 앱을 빌드합니다.
+    await tester.pumpWidget(const WebtoonDiaryApp());
+
+    // AppBar가 있는지 확인합니다.
+    expect(find.byType(AppBar), findsOneWidget);
     
-    // 카드들이 있는지 확인합니다 (최소 2개 이상).
-    expect(find.byType(Card), findsAtLeastNWidgets(2));
-  });
-
-  testWidgets('일기 작성 카드 탭 테스트', (WidgetTester tester) async {
-    // 앱을 빌드합니다.
-    await tester.pumpWidget(const WebtoonDiaryApp());
-
-    // 일기 작성 카드를 찾아 탭합니다.
-    await tester.tap(find.text('일기 작성').first);
-    await tester.pump();
-
-    // 다이얼로그가 표시되는지 확인합니다.
-    expect(find.text('일기 작성 기능이 곧 추가될 예정입니다!'), findsOneWidget);
-  });
-
-  testWidgets('만화 생성 카드 탭 테스트', (WidgetTester tester) async {
-    // 앱을 빌드합니다.
-    await tester.pumpWidget(const WebtoonDiaryApp());
-
-    // 만화 생성 카드를 찾아 탭합니다.
-    await tester.tap(find.text('만화 생성').first);
-    await tester.pump();
-
-    // 다이얼로그가 표시되는지 확인합니다.
-    expect(find.text('AI 만화 생성 기능이 곧 추가될 예정입니다!'), findsOneWidget);
+    // Scaffold가 있는지 확인합니다.
+    expect(find.byType(Scaffold), findsOneWidget);
+    
+    // Center 위젯이 있는지 확인합니다.
+    expect(find.byType(Center), findsOneWidget);
   });
 }

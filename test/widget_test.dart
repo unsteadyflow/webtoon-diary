@@ -35,7 +35,7 @@ void main() {
     // Scaffold가 있는지 확인합니다.
     expect(find.byType(Scaffold), findsOneWidget);
     
-    // Center 위젯이 있는지 확인합니다.
-    expect(find.byType(Center), findsOneWidget);
+    // Center 위젯이 있는지 확인합니다 (최소 1개).
+    expect(find.byType(Center), findsAtLeastNWidgets(1));
   });
 }

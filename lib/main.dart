@@ -9,7 +9,7 @@ void main() async {
     await dotenv.load(fileName: "config.env");
   } catch (e) {
     // 개발 모드에서는 환경 변수 파일이 없어도 계속 진행
-    print('Environment file not found, continuing in development mode');
+    // Environment file not found, continuing in development mode
   }
   
   runApp(const WebtoonDiaryApp());

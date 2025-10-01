@@ -38,6 +38,10 @@ dependencies:
   
   # 환경 변수
   flutter_dotenv: ^5.1.0
+  
+  # 소셜 로그인
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^6.1.0
 
 dev_dependencies:
   flutter_test:

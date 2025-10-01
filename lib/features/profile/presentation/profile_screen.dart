@@ -178,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: 120,
       height: 120,
-      color: const Color(0xFF00D884).withOpacity(0.1),
+      color: const Color(0xFF00D884).withValues(alpha: 0.1),
       child: const Icon(
         Icons.person,
         size: 60,
@@ -225,9 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
+        color: Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.withOpacity(0.3)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -271,7 +271,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 8),
           _buildInfoRow('사용자 ID', authProvider.userId ?? ''),
           const SizedBox(height: 8),
-          _buildInfoRow('가입일', _formatDate(authProvider.user?.createdAt != null ? DateTime.tryParse(authProvider.user!.createdAt!) : null)),
+          _buildInfoRow(
+              '가입일',
+              _formatDate(authProvider.user?.createdAt != null
+                  ? DateTime.tryParse(authProvider.user!.createdAt)
+                  : null)),
         ],
       ),
     );
@@ -370,7 +374,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: const Color(0xFF00D884).withOpacity(0.1),
+              color: const Color(0xFF00D884).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Icon(

@@ -88,7 +88,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: 일기 작성 화면으로 이동
+          // 일기 작성 기능은 추후 구현 예정
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('일기 작성 기능은 곧 추가될 예정입니다'),

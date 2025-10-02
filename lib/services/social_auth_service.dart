@@ -12,15 +12,20 @@ class SocialAuthService {
   SocialAuthService._internal();
 
   final SupabaseService _supabaseService = SupabaseService.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  GoogleSignIn? _googleSignIn;
+  
+  GoogleSignIn get _googleSignInInstance {
+    _googleSignIn ??= GoogleSignIn(
+      scopes: ['email', 'profile'],
+    );
+    return _googleSignIn!;
+  }
 
   /// Google 로그인
   Future<AuthResponse?> signInWithGoogle() async {
     try {
       // Google 로그인 실행
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignInInstance.signIn();
       if (googleUser == null) {
         // 사용자가 로그인을 취소한 경우
         return null;
@@ -41,7 +46,7 @@ class SocialAuthService {
       return response;
     } catch (e) {
       // Google 로그인 실패 시 로그아웃 처리
-      await _googleSignIn.signOut();
+      await _googleSignInInstance.signOut();
       rethrow;
     }
   }
@@ -75,7 +80,7 @@ class SocialAuthService {
   Future<void> signOut() async {
     try {
       // Google 로그아웃
-      await _googleSignIn.signOut();
+      await _googleSignInInstance.signOut();
 
       // Supabase 로그아웃
       await _supabaseService.signOut();
@@ -85,8 +90,8 @@ class SocialAuthService {
   }
 
   /// 현재 Google 로그인 상태 확인
-  bool get isGoogleSignedIn => _googleSignIn.currentUser != null;
+  bool get isGoogleSignedIn => _googleSignIn?.currentUser != null;
 
   /// Google 사용자 정보
-  GoogleSignInAccount? get googleUser => _googleSignIn.currentUser;
+  GoogleSignInAccount? get googleUser => _googleSignIn?.currentUser;
 }

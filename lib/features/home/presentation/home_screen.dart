@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../profile/presentation/profile_screen.dart';
+import '../../diary/presentation/diary_write_screen.dart';
+import '../../diary/presentation/diary_list_screen.dart';
 
 /// 홈 화면
 ///
@@ -23,6 +25,12 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          // 일기 목록 버튼
+          IconButton(
+            onPressed: () => _navigateToDiaryList(context),
+            icon: const Icon(Icons.book),
+            tooltip: '내 일기',
+          ),
           // 프로필 버튼
           Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
@@ -87,15 +95,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 일기 작성 기능은 추후 구현 예정
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('일기 작성 기능은 곧 추가될 예정입니다'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        },
+        onPressed: () => _navigateToDiaryWrite(context),
         backgroundColor: const Color(0xFF00D884),
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -146,6 +146,26 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => const ProfileScreen(),
+      ),
+    );
+  }
+
+  /// 일기 작성 화면으로 이동
+  void _navigateToDiaryWrite(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DiaryWriteScreen(),
+      ),
+    );
+  }
+
+  /// 일기 목록 화면으로 이동
+  void _navigateToDiaryList(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DiaryListScreen(),
       ),
     );
   }

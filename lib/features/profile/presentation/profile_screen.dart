@@ -271,11 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 8),
           _buildInfoRow('사용자 ID', authProvider.userId ?? ''),
           const SizedBox(height: 8),
-          _buildInfoRow(
-              '가입일',
-              _formatDate(authProvider.user?.createdAt != null
-                  ? DateTime.tryParse(authProvider.user!.createdAt)
-                  : null)),
+          _buildInfoRow('가입일', _formatDate(authProvider.user?.createdAt != null ? DateTime.tryParse(authProvider.user!.createdAt) : null)),
         ],
       ),
     );

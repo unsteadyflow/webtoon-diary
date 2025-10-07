@@ -1,24 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 
 import 'package:webtoon_diary/features/comic/presentation/saved_images_screen.dart';
-import 'package:webtoon_diary/services/image_download_service.dart';
-
-// Mock 클래스 생성
-@GenerateMocks([ImageDownloadService])
-import 'saved_images_screen_test.mocks.dart';
 
 void main() {
   group('SavedImagesScreen', () {
-    late MockImageDownloadService mockImageDownloadService;
-
-    setUp(() {
-      mockImageDownloadService = MockImageDownloadService();
-    });
-
     testWidgets('저장된 이미지가 없을 때 빈 상태 표시', (WidgetTester tester) async {
       // When
       await tester.pumpWidget(

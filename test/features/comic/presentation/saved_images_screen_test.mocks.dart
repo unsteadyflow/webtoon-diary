@@ -104,6 +104,15 @@ class MockImageDownloadService extends _i1.Mock
       ) as _i3.Future<List<_i5.File>>);
 
   @override
+  bool isImageFile(String? filePath) => (super.noSuchMethod(
+        Invocation.method(
+          #isImageFile,
+          [filePath],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
   _i3.Future<void> deleteSavedImage(String? filePath) => (super.noSuchMethod(
         Invocation.method(
           #deleteSavedImage,

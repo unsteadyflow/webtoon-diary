@@ -1,5 +1,6 @@
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+// 조건부 import - 테스트 환경에서는 사용하지 않음
+import 'package:google_sign_in/google_sign_in.dart' if (dart.library.io) 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart' if (dart.library.io) 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/supabase_service.dart';
 

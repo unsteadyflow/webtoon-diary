@@ -13,7 +13,7 @@ class SocialAuthService {
 
   final SupabaseService _supabaseService = SupabaseService.instance;
   GoogleSignIn? _googleSignIn;
-  
+
   GoogleSignIn get _googleSignInInstance {
     _googleSignIn ??= GoogleSignIn(
       scopes: ['email', 'profile'],
@@ -25,7 +25,8 @@ class SocialAuthService {
   Future<AuthResponse?> signInWithGoogle() async {
     try {
       // Google 로그인 실행
-      final GoogleSignInAccount? googleUser = await _googleSignInInstance.signIn();
+      final GoogleSignInAccount? googleUser =
+          await _googleSignInInstance.signIn();
       if (googleUser == null) {
         // 사용자가 로그인을 취소한 경우
         return null;

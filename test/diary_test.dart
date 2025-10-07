@@ -106,10 +106,10 @@ void main() {
     test('일기 내용 유효성 검사', () {
       // 빈 내용
       expect(''.trim().isEmpty, isTrue);
-      
+
       // 공백만 있는 내용
       expect('   '.trim().isEmpty, isTrue);
-      
+
       // 유효한 내용
       expect('오늘은 좋은 하루였습니다.'.trim().isEmpty, isFalse);
     });
@@ -117,29 +117,50 @@ void main() {
     test('제목 유효성 검사', () {
       // 빈 제목 (선택사항이므로 유효)
       expect(''.trim().isEmpty, isTrue);
-      
+
       // 유효한 제목
       expect('오늘의 일기'.trim().isEmpty, isFalse);
-      
+
       // 긴 제목
       final longTitle = 'a' * 100;
       expect(longTitle.length > 50, isTrue);
     });
 
     test('기분 및 날씨 선택 테스트', () {
-      final moodOptions = ['😊', '😄', '😍', '🥰', '😎', '🤔', '😐', '😔', '😢', '😭', '😤', '😡'];
-      final weatherOptions = ['☀️ 맑음', '⛅ 흐림', '☁️ 구름', '🌧️ 비', '⛈️ 천둥', '❄️ 눈', '🌪️ 바람'];
-      
+      final moodOptions = [
+        '😊',
+        '😄',
+        '😍',
+        '🥰',
+        '😎',
+        '🤔',
+        '😐',
+        '😔',
+        '😢',
+        '😭',
+        '😤',
+        '😡'
+      ];
+      final weatherOptions = [
+        '☀️ 맑음',
+        '⛅ 흐림',
+        '☁️ 구름',
+        '🌧️ 비',
+        '⛈️ 천둥',
+        '❄️ 눈',
+        '🌪️ 바람'
+      ];
+
       // 기분 옵션 개수 확인
       expect(moodOptions.length, 12);
-      
+
       // 날씨 옵션 개수 확인
       expect(weatherOptions.length, 7);
-      
+
       // 특정 기분이 목록에 있는지 확인
       expect(moodOptions.contains('😊'), isTrue);
       expect(moodOptions.contains('😢'), isTrue);
-      
+
       // 특정 날씨가 목록에 있는지 확인
       expect(weatherOptions.contains('☀️ 맑음'), isTrue);
       expect(weatherOptions.contains('🌧️ 비'), isTrue);
@@ -164,7 +185,7 @@ void main() {
       // 로컬 ID 형식 확인
       expect(diary.id.startsWith('local_'), isTrue);
       expect(diary.isDraft, isTrue);
-      
+
       // JSON 변환 가능 확인
       final json = diary.toJson();
       expect(json['id'], startsWith('local_'));

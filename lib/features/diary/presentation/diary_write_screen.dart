@@ -14,25 +14,42 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   final DiaryService _diaryService = DiaryService.instance;
-  
+
   bool _isLoading = false;
   bool _isDraft = false;
   String? _selectedMood;
   String? _selectedWeather;
   String? _selectedLocation;
-  
+
   Timer? _autoSaveTimer;
-  
+
   // 기분 옵션
   final List<String> _moodOptions = [
-    '😊', '😄', '😍', '🥰', '😎', '🤔', '😐', '😔', '😢', '😭', '😤', '😡'
+    '😊',
+    '😄',
+    '😍',
+    '🥰',
+    '😎',
+    '🤔',
+    '😐',
+    '😔',
+    '😢',
+    '😭',
+    '😤',
+    '😡'
   ];
-  
+
   // 날씨 옵션
   final List<String> _weatherOptions = [
-    '☀️ 맑음', '⛅ 흐림', '☁️ 구름', '🌧️ 비', '⛈️ 천둥', '❄️ 눈', '🌪️ 바람'
+    '☀️ 맑음',
+    '⛅ 흐림',
+    '☁️ 구름',
+    '🌧️ 비',
+    '⛈️ 천둥',
+    '❄️ 눈',
+    '🌪️ 바람'
   ];
 
   @override
@@ -63,7 +80,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     try {
       await _diaryService.autoSaveDraft(
         content: _contentController.text,
-        title: _titleController.text.trim().isEmpty ? null : _titleController.text,
+        title:
+            _titleController.text.trim().isEmpty ? null : _titleController.text,
         mood: _selectedMood,
         weather: _selectedWeather,
         location: _selectedLocation,
@@ -76,7 +94,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   /// 일기 저장
   Future<void> _saveDiary() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
     });
@@ -84,7 +102,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     try {
       await _diaryService.createDiary(
         content: _contentController.text,
-        title: _titleController.text.trim().isEmpty ? null : _titleController.text,
+        title:
+            _titleController.text.trim().isEmpty ? null : _titleController.text,
         mood: _selectedMood,
         weather: _selectedWeather,
         location: _selectedLocation,
@@ -187,24 +206,25 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                 ),
                 maxLines: 1,
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 기분 선택
               _buildMoodSelector(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 날씨 선택
               _buildWeatherSelector(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 위치 입력
               TextFormField(
                 controller: TextEditingController(text: _selectedLocation),
@@ -217,15 +237,16 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                   prefixIcon: const Icon(Icons.location_on),
                 ),
                 maxLines: 1,
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 일기 내용 입력
               TextFormField(
                 controller: _contentController,
@@ -237,7 +258,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                   alignLabelWithHint: true,
                 ),
@@ -249,9 +271,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 저장 옵션
               Row(
                 children: [
@@ -275,9 +297,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // 저장 버튼
               SizedBox(
                 width: double.infinity,
@@ -297,7 +319,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Text(
@@ -342,10 +365,14 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF00D884).withValues(alpha: 0.1) : Colors.grey[100],
+                  color: isSelected
+                      ? const Color(0xFF00D884).withValues(alpha: 0.1)
+                      : Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF00D884)
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
@@ -385,20 +412,27 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF00D884).withValues(alpha: 0.1) : Colors.grey[100],
+                  color: isSelected
+                      ? const Color(0xFF00D884).withValues(alpha: 0.1)
+                      : Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF00D884)
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
                 child: Text(
                   weather,
                   style: TextStyle(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.black87,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color:
+                        isSelected ? const Color(0xFF00D884) : Colors.black87,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ),

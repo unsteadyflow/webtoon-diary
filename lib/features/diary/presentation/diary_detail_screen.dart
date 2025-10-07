@@ -55,7 +55,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
       try {
         await _diaryService.deleteDiary(_diary.id);
-        
+
         if (mounted) {
           Navigator.pop(context, true); // 삭제 완료 신호
           ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +98,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       setState(() {
         _diary = result;
       });
-      
+
       // 수정 완료 신호
       Navigator.pop(context, true);
     }
@@ -176,14 +176,14 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 메타 정보
             _buildMetaInfo(),
-            
+
             const SizedBox(height: 20),
-            
+
             // 내용
             Text(
               _diary.content,
@@ -192,9 +192,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                 height: 1.6,
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // AI 만화 생성 버튼 (임시저장이 아닌 경우만)
             if (!_diary.isDraft)
               SizedBox(
@@ -254,14 +254,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                   ),
                 if (_diary.mood != null && _diary.weather != null)
                   const SizedBox(width: 20),
-                if (_diary.weather != null)
-                  Text('날씨: ${_diary.weather}'),
+                if (_diary.weather != null) Text('날씨: ${_diary.weather}'),
               ],
             ),
-          
+
           if (_diary.mood != null || _diary.weather != null)
             const SizedBox(height: 12),
-          
+
           // 위치
           if (_diary.location != null)
             Row(
@@ -278,10 +277,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                 ),
               ],
             ),
-          
-          if (_diary.location != null)
-            const SizedBox(height: 12),
-          
+
+          if (_diary.location != null) const SizedBox(height: 12),
+
           // 작성일과 수정일
           Row(
             children: [
@@ -297,7 +295,8 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                       ),
                     ),
                     Text(
-                      DateFormat('yyyy년 MM월 dd일 HH:mm').format(_diary.createdAt),
+                      DateFormat('yyyy년 MM월 dd일 HH:mm')
+                          .format(_diary.createdAt),
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -316,7 +315,8 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                         ),
                       ),
                       Text(
-                        DateFormat('yyyy년 MM월 dd일 HH:mm').format(_diary.updatedAt),
+                        DateFormat('yyyy년 MM월 dd일 HH:mm')
+                            .format(_diary.updatedAt),
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -324,7 +324,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                 ),
             ],
           ),
-          
+
           // 상태 표시
           if (_diary.isDraft)
             Container(
@@ -366,23 +366,40 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   final DiaryService _diaryService = DiaryService.instance;
-  
+
   bool _isLoading = false;
   bool _isDraft = false;
   String? _selectedMood;
   String? _selectedWeather;
   String? _selectedLocation;
-  
+
   // 기분 옵션
   final List<String> _moodOptions = [
-    '😊', '😄', '😍', '🥰', '😎', '🤔', '😐', '😔', '😢', '😭', '😤', '😡'
+    '😊',
+    '😄',
+    '😍',
+    '🥰',
+    '😎',
+    '🤔',
+    '😐',
+    '😔',
+    '😢',
+    '😭',
+    '😤',
+    '😡'
   ];
-  
+
   // 날씨 옵션
   final List<String> _weatherOptions = [
-    '☀️ 맑음', '⛅ 흐림', '☁️ 구름', '🌧️ 비', '⛈️ 천둥', '❄️ 눈', '🌪️ 바람'
+    '☀️ 맑음',
+    '⛅ 흐림',
+    '☁️ 구름',
+    '🌧️ 비',
+    '⛈️ 천둥',
+    '❄️ 눈',
+    '🌪️ 바람'
   ];
 
   @override
@@ -406,7 +423,7 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
   /// 일기 수정 저장
   Future<void> _updateDiary() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
     });
@@ -415,7 +432,8 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
       final updatedDiary = await _diaryService.updateDiary(
         diaryId: widget.diary.id,
         content: _contentController.text,
-        title: _titleController.text.trim().isEmpty ? null : _titleController.text,
+        title:
+            _titleController.text.trim().isEmpty ? null : _titleController.text,
         mood: _selectedMood,
         weather: _selectedWeather,
         location: _selectedLocation,
@@ -499,24 +517,25 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                 ),
                 maxLines: 1,
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 기분 선택
               _buildMoodSelector(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 날씨 선택
               _buildWeatherSelector(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 위치 입력
               TextFormField(
                 controller: TextEditingController(text: _selectedLocation),
@@ -528,15 +547,16 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                   prefixIcon: const Icon(Icons.location_on),
                 ),
                 maxLines: 1,
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 일기 내용 입력
               TextFormField(
                 controller: _contentController,
@@ -547,7 +567,8 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00D884), width: 2),
                   ),
                   alignLabelWithHint: true,
                 ),
@@ -559,9 +580,9 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 저장 옵션
               Row(
                 children: [
@@ -577,9 +598,9 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                   const Text('임시저장'),
                 ],
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // 저장 버튼
               SizedBox(
                 width: double.infinity,
@@ -599,7 +620,8 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : const Text(
@@ -644,10 +666,14 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF00D884).withValues(alpha: 0.1) : Colors.grey[100],
+                  color: isSelected
+                      ? const Color(0xFF00D884).withValues(alpha: 0.1)
+                      : Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF00D884)
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
@@ -687,20 +713,27 @@ class _DiaryEditScreenState extends State<DiaryEditScreen> {
                 });
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF00D884).withValues(alpha: 0.1) : Colors.grey[100],
+                  color: isSelected
+                      ? const Color(0xFF00D884).withValues(alpha: 0.1)
+                      : Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF00D884)
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
                 child: Text(
                   weather,
                   style: TextStyle(
-                    color: isSelected ? const Color(0xFF00D884) : Colors.black87,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color:
+                        isSelected ? const Color(0xFF00D884) : Colors.black87,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
               ),

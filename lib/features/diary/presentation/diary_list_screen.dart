@@ -46,13 +46,12 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
     }
   }
 
-
   /// 오프라인 동기화
   Future<void> _syncOfflineData() async {
     try {
       await _diaryService.syncOfflineData();
       await _loadDiaries();
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -102,7 +101,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
               builder: (context) => const DiaryWriteScreen(),
             ),
           );
-          
+
           // 일기 작성 후 목록 새로고침
           if (result != null) {
             _loadDiaries();
@@ -212,7 +211,7 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
               builder: (context) => DiaryDetailScreen(diary: diary),
             ),
           );
-          
+
           // 일기 수정 후 목록 새로고침
           if (result != null) {
             _loadDiaries();
@@ -240,7 +239,8 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                   ),
                   if (diary.isDraft)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -256,9 +256,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                     ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // 기분과 날씨
               if (diary.mood != null || diary.weather != null)
                 Row(
@@ -280,9 +280,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                       ),
                   ],
                 ),
-              
+
               const SizedBox(height: 8),
-              
+
               // 내용 미리보기
               Text(
                 diary.content,
@@ -290,9 +290,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // 하단 정보
               Row(
                 children: [
@@ -319,9 +319,9 @@ class _DiaryListScreenState extends State<DiaryListScreen> {
                         ],
                       ),
                     ),
-                  
+
                   const Spacer(),
-                  
+
                   // 날짜
                   Text(
                     DateFormat('yyyy.MM.dd HH:mm').format(diary.createdAt),

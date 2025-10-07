@@ -12,7 +12,7 @@ class DiaryService {
   DiaryService._();
 
   final SupabaseService _supabaseService = SupabaseService.instance;
-  
+
   // 로컬 캐시 키
   static const String _draftDiariesKey = 'draft_diaries';
   static const String _lastAutoSaveKey = 'last_auto_save';
@@ -54,7 +54,8 @@ class DiaryService {
       return Diary.fromJson(response);
     } catch (e) {
       // 네트워크 오류 시 로컬에 임시 저장
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
         return await _saveDraftLocally(content, title, mood, weather, location);
       }
       rethrow;
@@ -96,8 +97,10 @@ class DiaryService {
       return Diary.fromJson(response);
     } catch (e) {
       // 네트워크 오류 시 로컬에 임시 저장
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
-        return await _updateDraftLocally(diaryId, content, title, mood, weather, location);
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        return await _updateDraftLocally(
+            diaryId, content, title, mood, weather, location);
       }
       rethrow;
     }
@@ -106,10 +109,7 @@ class DiaryService {
   /// 일기 삭제
   Future<void> deleteDiary(String diaryId) async {
     try {
-      await _supabaseService.client
-          .from('diaries')
-          .delete()
-          .eq('id', diaryId);
+      await _supabaseService.client.from('diaries').delete().eq('id', diaryId);
     } catch (e) {
       // 로컬에서도 삭제
       await _deleteDraftLocally(diaryId);
@@ -134,7 +134,8 @@ class DiaryService {
       return response.map<Diary>((json) => Diary.fromJson(json)).toList();
     } catch (e) {
       // 네트워크 오류 시 로컬 데이터 반환
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
         return await _getLocalDrafts();
       }
       rethrow;
@@ -170,7 +171,7 @@ class DiaryService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final now = DateTime.now();
-      
+
       // 마지막 자동저장 시간 확인 (5분마다 자동저장)
       final lastSaveStr = prefs.getString(_lastAutoSaveKey);
       if (lastSaveStr != null) {
@@ -212,7 +213,7 @@ class DiaryService {
             location: draft.location,
             isDraft: draft.isDraft,
           );
-          
+
           // 성공 시 로컬에서 삭제
           await _deleteDraftLocally(draft.id);
         } catch (e) {
@@ -238,7 +239,7 @@ class DiaryService {
     final prefs = await SharedPreferences.getInstance();
     final now = DateTime.now();
     final diaryId = 'local_${now.millisecondsSinceEpoch}';
-    
+
     final diary = Diary(
       id: diaryId,
       userId: _supabaseService.currentUser?.id ?? 'anonymous',
@@ -254,10 +255,10 @@ class DiaryService {
 
     final localDrafts = await _getLocalDrafts();
     localDrafts.add(diary);
-    
+
     final jsonList = localDrafts.map((d) => d.toJson()).toList();
     await prefs.setString(_draftDiariesKey, jsonEncode(jsonList));
-    
+
     return diary;
   }
 
@@ -272,7 +273,7 @@ class DiaryService {
   ) async {
     final localDrafts = await _getLocalDrafts();
     final index = localDrafts.indexWhere((d) => d.id == diaryId);
-    
+
     if (index != -1) {
       final updatedDiary = localDrafts[index].copyWith(
         content: content,
@@ -282,16 +283,16 @@ class DiaryService {
         location: location,
         updatedAt: DateTime.now(),
       );
-      
+
       localDrafts[index] = updatedDiary;
-      
+
       final prefs = await SharedPreferences.getInstance();
       final jsonList = localDrafts.map((d) => d.toJson()).toList();
       await prefs.setString(_draftDiariesKey, jsonEncode(jsonList));
-      
+
       return updatedDiary;
     }
-    
+
     throw Exception('로컬에서 일기를 찾을 수 없습니다.');
   }
 
@@ -299,7 +300,7 @@ class DiaryService {
   Future<void> _deleteDraftLocally(String diaryId) async {
     final localDrafts = await _getLocalDrafts();
     localDrafts.removeWhere((d) => d.id == diaryId);
-    
+
     final prefs = await SharedPreferences.getInstance();
     final jsonList = localDrafts.map((d) => d.toJson()).toList();
     await prefs.setString(_draftDiariesKey, jsonEncode(jsonList));
@@ -310,9 +311,9 @@ class DiaryService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonStr = prefs.getString(_draftDiariesKey);
-      
+
       if (jsonStr == null) return [];
-      
+
       final jsonList = jsonDecode(jsonStr) as List;
       return jsonList.map((json) => Diary.fromJson(json)).toList();
     } catch (e) {

@@ -1,11 +1,7 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:webtoon_diary/services/image_download_service.dart';
 import 'package:webtoon_diary/services/supabase_service.dart';
@@ -20,12 +16,10 @@ import 'image_download_service_test.mocks.dart';
 void main() {
   group('ImageDownloadService', () {
     late ImageDownloadService imageDownloadService;
-    late MockSupabaseService mockSupabaseService;
 
     setUp(() {
       TestWidgetsFlutterBinding.ensureInitialized();
       imageDownloadService = ImageDownloadService.instance;
-      mockSupabaseService = MockSupabaseService();
     });
 
     group('이미지 다운로드 및 저장', () {

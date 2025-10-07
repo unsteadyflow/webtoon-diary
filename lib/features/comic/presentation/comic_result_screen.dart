@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/models/comic.dart';
+import '../../../services/image_download_service.dart';
 
 /// 만화 결과 화면
 class ComicResultScreen extends StatelessWidget {
@@ -194,14 +195,103 @@ class ComicResultScreen extends StatelessWidget {
     );
   }
 
-  void _downloadComic(BuildContext context) {
-    // TODO: 이미지 다운로드 기능 구현
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('다운로드 기능은 추후 구현 예정입니다.'),
-        backgroundColor: Colors.orange,
+  void _downloadComic(BuildContext context) async {
+    final imageDownloadService = ImageDownloadService.instance;
+    
+    // 해상도 선택 다이얼로그 표시
+    final quality = await showDialog<ImageQuality>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('다운로드 해상도 선택'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('기본 해상도'),
+              subtitle: const Text('빠른 다운로드, 적은 용량'),
+              leading: const Icon(Icons.image),
+              onTap: () => Navigator.pop(context, ImageQuality.standard),
+            ),
+            ListTile(
+              title: const Text('고해상도'),
+              subtitle: const Text('느린 다운로드, 큰 용량'),
+              leading: const Icon(Icons.high_quality),
+              onTap: () => Navigator.pop(context, ImageQuality.high),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('취소'),
+          ),
+        ],
       ),
     );
+
+    if (quality == null) return;
+
+    // 로딩 다이얼로그 표시
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Text('다운로드 중...'),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final fileName = '${comic.title}_${DateTime.now().millisecondsSinceEpoch}.png';
+      final savePath = await imageDownloadService.downloadAndSaveImage(
+        imageUrl: comic.imageUrl,
+        fileName: fileName,
+        quality: quality,
+      );
+
+      // 로딩 다이얼로그 닫기
+      if (context.mounted) {
+        Navigator.pop(context);
+        
+        // 성공 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('다운로드 완료!\n저장 위치: $savePath'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: '확인',
+              textColor: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // 로딩 다이얼로그 닫기
+      if (context.mounted) {
+        Navigator.pop(context);
+        
+        // 오류 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('다운로드 실패: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: '재시도',
+              textColor: Colors.white,
+              onPressed: () => _downloadComic(context),
+            ),
+          ),
+        );
+      }
+    }
   }
 
   String _formatDate(DateTime date) {

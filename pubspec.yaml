@@ -39,14 +39,22 @@ dependencies:
   # 환경 변수
   flutter_dotenv: ^5.1.0
   
-  # 소셜 로그인
-  google_sign_in: ^6.2.1
-  sign_in_with_apple: ^6.1.0
+  # 파일 시스템 및 권한
+  permission_handler: ^11.3.1
+  path_provider: ^2.1.2
+  path: ^1.9.0
+  
+  # 파일 저장
+  file_saver: ^0.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  
+  # 테스트 도구
+  mockito: ^5.4.4
+  build_runner: ^2.4.7
 
 flutter:
   uses-material-design: true

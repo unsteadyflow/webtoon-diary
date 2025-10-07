@@ -4,6 +4,7 @@ import '../../../core/providers/auth_provider.dart';
 import '../../profile/presentation/profile_screen.dart';
 import '../../diary/presentation/diary_write_screen.dart';
 import '../../diary/presentation/diary_list_screen.dart';
+import '../../comic/presentation/saved_images_screen.dart';
 
 /// 홈 화면
 ///
@@ -36,13 +37,15 @@ class HomeScreen extends StatelessWidget {
             builder: (context, authProvider, child) {
               return PopupMenuButton<String>(
                 icon: const Icon(Icons.account_circle),
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    _handleLogout(context);
-                  } else if (value == 'profile') {
-                    _navigateToProfile(context);
-                  }
-                },
+                    onSelected: (value) {
+                      if (value == 'logout') {
+                        _handleLogout(context);
+                      } else if (value == 'profile') {
+                        _navigateToProfile(context);
+                      } else if (value == 'saved_images') {
+                        _navigateToSavedImages(context);
+                      }
+                    },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'profile',
@@ -51,6 +54,16 @@ class HomeScreen extends StatelessWidget {
                         Icon(Icons.person_outline),
                         SizedBox(width: 8),
                         Text('프로필'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'saved_images',
+                    child: Row(
+                      children: [
+                        Icon(Icons.image),
+                        SizedBox(width: 8),
+                        Text('저장된 이미지'),
                       ],
                     ),
                   ),
@@ -166,6 +179,16 @@ class HomeScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => const DiaryListScreen(),
+      ),
+    );
+  }
+
+  /// 저장된 이미지 화면으로 이동
+  void _navigateToSavedImages(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SavedImagesScreen(),
       ),
     );
   }

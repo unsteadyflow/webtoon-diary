@@ -14,9 +14,10 @@ class AiServerService {
   AiServerService._();
 
   final SupabaseService _supabaseService = SupabaseService.instance;
-  
+
   // AI 서버 URL
-  String get _aiServerUrl => dotenv.env['AI_SERVER_URL'] ?? 'http://127.0.0.1:8000';
+  String get _aiServerUrl =>
+      dotenv.env['AI_SERVER_URL'] ?? 'http://127.0.0.1:8000';
 
   /// 만화 생성 요청
   Future<ComicGenerationResponse> generateComic({
@@ -39,13 +40,15 @@ class AiServerService {
         style: style,
       );
 
-      final response = await http.post(
-        Uri.parse('$_aiServerUrl/api/v1/comic/generate'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(request.toJson()),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            Uri.parse('$_aiServerUrl/api/v1/comic/generate'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(request.toJson()),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -95,13 +98,13 @@ class AiServerService {
       try {
         final comic = await getComicStatus(comicId);
         yield comic;
-        
+
         // 완료되거나 실패하면 폴링 중단
-        if (comic.status == ComicStatus.completed || 
+        if (comic.status == ComicStatus.completed ||
             comic.status == ComicStatus.failed) {
           break;
         }
-        
+
         // 3초마다 상태 확인
         await Future.delayed(const Duration(seconds: 3));
       } catch (e) {
@@ -124,13 +127,13 @@ class AiServerService {
   int calculateETA(Comic comic) {
     if (comic.status == ComicStatus.completed) return 0;
     if (comic.status == ComicStatus.failed) return -1;
-    
+
     if (comic.estimatedTimeSeconds != null) {
       final elapsed = DateTime.now().difference(comic.createdAt).inSeconds;
       final remaining = comic.estimatedTimeSeconds! - elapsed;
       return remaining > 0 ? remaining : 0;
     }
-    
+
     // 기본 추정 시간 (30초)
     return 30;
   }
@@ -158,7 +161,7 @@ class AiServerService {
         final publicUrl = _supabaseService.client.storage
             .from('comic-images')
             .getPublicUrl(fileName);
-        
+
         return publicUrl;
       } else {
         throw Exception('Supabase Storage 업로드 실패');

@@ -37,14 +37,14 @@ class ComicResultScreen extends StatelessWidget {
           children: [
             // 만화 이미지
             _buildComicImage(),
-            
+
             const SizedBox(height: 24),
-            
+
             // 만화 정보
             _buildComicInfo(),
-            
+
             const SizedBox(height: 32),
-            
+
             // 액션 버튼들
             _buildActionButtons(context),
           ],
@@ -124,7 +124,8 @@ class ComicResultScreen extends StatelessWidget {
               children: [
                 _buildInfoChip('스타일', comic.style),
                 const SizedBox(width: 8),
-                _buildInfoChip('완성일', _formatDate(comic.completedAt ?? comic.createdAt)),
+                _buildInfoChip(
+                    '완성일', _formatDate(comic.completedAt ?? comic.createdAt)),
               ],
             ),
           ],

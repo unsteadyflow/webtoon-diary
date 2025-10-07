@@ -43,8 +43,8 @@ class Comic {
       style: json['style'] as String,
       status: ComicStatus.fromString(json['status'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),
-      completedAt: json['completed_at'] != null 
-          ? DateTime.parse(json['completed_at'] as String) 
+      completedAt: json['completed_at'] != null
+          ? DateTime.parse(json['completed_at'] as String)
           : null,
       estimatedTimeSeconds: json['estimated_time_seconds'] as int?,
       errorMessage: json['error_message'] as String?,

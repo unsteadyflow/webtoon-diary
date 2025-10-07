@@ -22,7 +22,7 @@ class ComicGenerationScreen extends StatefulWidget {
 
 class _ComicGenerationScreenState extends State<ComicGenerationScreen> {
   final AiServerService _aiServerService = AiServerService.instance;
-  
+
   ComicStatus _status = ComicStatus.pending;
   int _etaSeconds = 60;
   StreamSubscription<Comic>? _statusSubscription;
@@ -59,8 +59,8 @@ class _ComicGenerationScreenState extends State<ComicGenerationScreen> {
       );
 
       // 생성 상태 폴링 시작
-      _statusSubscription = _aiServerService.pollComicStatus(response.comicId)
-          .listen(
+      _statusSubscription =
+          _aiServerService.pollComicStatus(response.comicId).listen(
         (comic) {
           if (mounted) {
             setState(() {
@@ -130,24 +130,24 @@ class _ComicGenerationScreenState extends State<ComicGenerationScreen> {
           children: [
             // 상태별 아이콘
             _buildStatusIcon(),
-            
+
             const SizedBox(height: 32),
-            
+
             // 상태 메시지
             _buildStatusMessage(),
-            
+
             const SizedBox(height: 24),
-            
+
             // 진행률 표시
             if (_status == ComicStatus.processing) _buildProgressIndicator(),
-            
+
             const SizedBox(height: 32),
-            
+
             // ETA 표시
             if (_etaSeconds > 0) _buildETA(),
-            
+
             const SizedBox(height: 48),
-            
+
             // 액션 버튼
             _buildActionButtons(),
           ],
@@ -242,7 +242,7 @@ class _ComicGenerationScreenState extends State<ComicGenerationScreen> {
   Widget _buildETA() {
     final minutes = _etaSeconds ~/ 60;
     final seconds = _etaSeconds % 60;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(

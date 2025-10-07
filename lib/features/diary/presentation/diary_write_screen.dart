@@ -150,7 +150,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     try {
       final diary = await _diaryService.createDiary(
         content: _contentController.text,
-        title: _titleController.text.trim().isEmpty ? null : _titleController.text,
+        title:
+            _titleController.text.trim().isEmpty ? null : _titleController.text,
         mood: _selectedMood,
         weather: _selectedWeather,
         location: _selectedLocation,

@@ -88,7 +88,7 @@ void main() {
 
     test('ETA 계산 테스트', () {
       final aiService = AiServerService.instance;
-      
+
       // 완료된 만화
       final completedComic = Comic(
         diaryId: 'test',
@@ -133,13 +133,13 @@ void main() {
   group('Error Handling Tests', () {
     test('네트워크 오류 시뮬레이션', () {
       // 실제 네트워크 호출 없이 오류 처리 로직 테스트
-      expect(() => throw Exception('네트워크 연결을 확인해주세요.'), 
-             throwsA(isA<Exception>()));
+      expect(
+          () => throw Exception('네트워크 연결을 확인해주세요.'), throwsA(isA<Exception>()));
     });
 
     test('타임아웃 오류 시뮬레이션', () {
-      expect(() => throw Exception('요청 시간이 초과되었습니다. 다시 시도해주세요.'), 
-             throwsA(isA<Exception>()));
+      expect(() => throw Exception('요청 시간이 초과되었습니다. 다시 시도해주세요.'),
+          throwsA(isA<Exception>()));
     });
   });
 }

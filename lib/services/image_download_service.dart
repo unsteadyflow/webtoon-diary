@@ -19,7 +19,8 @@ enum ImageQuality {
 /// 이미지 다운로드 및 저장 서비스
 class ImageDownloadService {
   static ImageDownloadService? _instance;
-  static ImageDownloadService get instance => _instance ??= ImageDownloadService._();
+  static ImageDownloadService get instance =>
+      _instance ??= ImageDownloadService._();
 
   ImageDownloadService._();
 
@@ -82,17 +83,19 @@ class ImageDownloadService {
   /// 저장 권한 요청
   Future<void> _requestStoragePermission() async {
     // Android에서는 storage 권한, iOS에서는 photos 권한 사용
-    Permission permission = Platform.isAndroid ? Permission.storage : Permission.photos;
+    Permission permission =
+        Platform.isAndroid ? Permission.storage : Permission.photos;
 
     final status = await permission.request();
-    
+
     if (status != PermissionStatus.granted) {
       throw Exception('저장 권한이 거부되었습니다. 설정에서 권한을 허용해주세요.');
     }
   }
 
   /// 이미지 다운로드
-  Future<Uint8List> _downloadImage(String imageUrl, ImageQuality quality) async {
+  Future<Uint8List> _downloadImage(
+      String imageUrl, ImageQuality quality) async {
     try {
       // 해상도에 따른 URL 수정 (실제 구현에서는 서버에서 다른 해상도 제공)
       String downloadUrl = imageUrl;
@@ -102,7 +105,7 @@ class ImageDownloadService {
       }
 
       final response = await http.get(Uri.parse(downloadUrl));
-      
+
       if (response.statusCode == 200) {
         return response.bodyBytes;
       } else {
@@ -121,7 +124,7 @@ class ImageDownloadService {
   Future<String> _getSavePath(String fileName) async {
     final directory = await getApplicationDocumentsDirectory();
     final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
-    
+
     // Downloads 디렉토리가 없으면 생성
     if (!await downloadsDir.exists()) {
       await downloadsDir.create(recursive: true);
@@ -141,7 +144,7 @@ class ImageDownloadService {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
-      
+
       if (!await downloadsDir.exists()) {
         return [];
       }
@@ -159,7 +162,8 @@ class ImageDownloadService {
   /// 이미지 파일 여부 확인
   bool isImageFile(String filePath) {
     final extension = path.extension(filePath).toLowerCase();
-    return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'].contains(extension);
+    return ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
+        .contains(extension);
   }
 
   /// 저장된 이미지 삭제
@@ -179,7 +183,7 @@ class ImageDownloadService {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
-      
+
       if (!await downloadsDir.exists()) {
         return 0;
       }

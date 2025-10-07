@@ -37,15 +37,15 @@ class HomeScreen extends StatelessWidget {
             builder: (context, authProvider, child) {
               return PopupMenuButton<String>(
                 icon: const Icon(Icons.account_circle),
-                    onSelected: (value) {
-                      if (value == 'logout') {
-                        _handleLogout(context);
-                      } else if (value == 'profile') {
-                        _navigateToProfile(context);
-                      } else if (value == 'saved_images') {
-                        _navigateToSavedImages(context);
-                      }
-                    },
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    _handleLogout(context);
+                  } else if (value == 'profile') {
+                    _navigateToProfile(context);
+                  } else if (value == 'saved_images') {
+                    _navigateToSavedImages(context);
+                  }
+                },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'profile',

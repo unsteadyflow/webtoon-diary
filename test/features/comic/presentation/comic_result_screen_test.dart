@@ -47,7 +47,8 @@ void main() {
       );
 
       // 스크롤하여 버튼을 화면에 표시
-      await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -200));
+      await tester.drag(
+          find.byType(SingleChildScrollView), const Offset(0, -200));
       await tester.pump();
 
       // 다운로드 버튼을 텍스트로 찾기
@@ -126,7 +127,8 @@ void main() {
       );
 
       // 스크롤하여 버튼을 화면에 표시
-      await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -200));
+      await tester.drag(
+          find.byType(SingleChildScrollView), const Offset(0, -200));
       await tester.pump();
 
       // 공유 버튼 탭

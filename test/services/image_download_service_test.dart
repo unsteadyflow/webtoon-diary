@@ -11,7 +11,6 @@ import 'package:webtoon_diary/services/supabase_service.dart';
   SupabaseService,
   http.Client,
 ])
-
 void main() {
   group('ImageDownloadService', () {
     late ImageDownloadService imageDownloadService;
@@ -35,11 +34,11 @@ void main() {
             fileName: fileName,
             quality: quality,
           );
-          
+
           // 파일이 생성되었는지 확인
           final file = File(result);
           expect(await file.exists(), isTrue);
-          
+
           // 파일 삭제
           await file.delete();
         } catch (e) {
@@ -48,25 +47,25 @@ void main() {
         }
       });
 
-          test('권한 거부 시 예외 발생', () async {
-            // Given
-            const imageUrl = 'https://example.com/test-image.png';
-            const fileName = 'test-image.png';
-            const quality = ImageQuality.standard;
+      test('권한 거부 시 예외 발생', () async {
+        // Given
+        const imageUrl = 'https://example.com/test-image.png';
+        const fileName = 'test-image.png';
+        const quality = ImageQuality.standard;
 
-            // When & Then
-            // 테스트 환경에서는 권한 플러그인이 제대로 작동하지 않으므로
-            // MissingPluginException이 발생하는 것을 확인
-            try {
-              await imageDownloadService.downloadAndSaveImage(
-                imageUrl: imageUrl,
-                fileName: fileName,
-                quality: quality,
-              );
-            } catch (e) {
-              expect(e.toString(), contains('MissingPluginException'));
-            }
-          });
+        // When & Then
+        // 테스트 환경에서는 권한 플러그인이 제대로 작동하지 않으므로
+        // MissingPluginException이 발생하는 것을 확인
+        try {
+          await imageDownloadService.downloadAndSaveImage(
+            imageUrl: imageUrl,
+            fileName: fileName,
+            quality: quality,
+          );
+        } catch (e) {
+          expect(e.toString(), contains('MissingPluginException'));
+        }
+      });
 
       test('잘못된 URL로 다운로드 시도 시 예외 발생', () async {
         // Given
@@ -101,11 +100,11 @@ void main() {
             fileName: fileName,
             quality: quality,
           );
-          
+
           // 파일이 생성되었는지 확인
           final file = File(result);
           expect(await file.exists(), isTrue);
-          
+
           // 파일 삭제
           await file.delete();
         } catch (e) {
@@ -183,11 +182,11 @@ void main() {
     group('해상도 옵션', () {
       test('ImageQuality enum 값 확인', () {
         // Given & When & Then
-      expect(ImageQuality.standard.value, 'standard');
-      expect(ImageQuality.standard.displayName, '기본 해상도');
-      
-      expect(ImageQuality.high.value, 'high');
-      expect(ImageQuality.high.displayName, '고해상도');
+        expect(ImageQuality.standard.value, 'standard');
+        expect(ImageQuality.standard.displayName, '기본 해상도');
+
+        expect(ImageQuality.high.value, 'high');
+        expect(ImageQuality.high.displayName, '고해상도');
       });
     });
   });

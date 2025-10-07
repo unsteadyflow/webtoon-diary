@@ -197,7 +197,7 @@ class ComicResultScreen extends StatelessWidget {
 
   void _downloadComic(BuildContext context) async {
     final imageDownloadService = ImageDownloadService.instance;
-    
+
     // 해상도 선택 다이얼로그 표시
     final quality = await showDialog<ImageQuality>(
       context: context,
@@ -248,7 +248,8 @@ class ComicResultScreen extends StatelessWidget {
     );
 
     try {
-      final fileName = '${comic.title}_${DateTime.now().millisecondsSinceEpoch}.png';
+      final fileName =
+          '${comic.title}_${DateTime.now().millisecondsSinceEpoch}.png';
       final savePath = await imageDownloadService.downloadAndSaveImage(
         imageUrl: comic.imageUrl,
         fileName: fileName,
@@ -258,7 +259,7 @@ class ComicResultScreen extends StatelessWidget {
       // 로딩 다이얼로그 닫기
       if (context.mounted) {
         Navigator.pop(context);
-        
+
         // 성공 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -277,7 +278,7 @@ class ComicResultScreen extends StatelessWidget {
       // 로딩 다이얼로그 닫기
       if (context.mounted) {
         Navigator.pop(context);
-        
+
         // 오류 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

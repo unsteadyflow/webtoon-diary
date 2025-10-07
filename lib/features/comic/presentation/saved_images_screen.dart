@@ -11,7 +11,8 @@ class SavedImagesScreen extends StatefulWidget {
 }
 
 class _SavedImagesScreenState extends State<SavedImagesScreen> {
-  final ImageDownloadService _imageDownloadService = ImageDownloadService.instance;
+  final ImageDownloadService _imageDownloadService =
+      ImageDownloadService.instance;
   List<File> _savedImages = [];
   bool _isLoading = true;
   int _storageUsage = 0;
@@ -31,7 +32,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
     try {
       final images = await _imageDownloadService.getSavedImages();
       final usage = await _imageDownloadService.getStorageUsage();
-      
+
       setState(() {
         _savedImages = images;
         _storageUsage = usage;
@@ -41,7 +42,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
       setState(() {
         _isLoading = false;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -77,7 +78,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
       try {
         await _imageDownloadService.deleteSavedImage(imageFile.path);
         await _loadSavedImages(); // 목록 새로고침
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -147,7 +148,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                     ],
                   ),
                 ),
-                
+
                 // 이미지 목록
                 Expanded(
                   child: _savedImages.isEmpty
@@ -181,7 +182,8 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                         )
                       : GridView.builder(
                           padding: const EdgeInsets.all(16),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
@@ -202,7 +204,8 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return const Center(
                                           child: Icon(
                                             Icons.error,
@@ -212,14 +215,15 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                         );
                                       },
                                     ),
-                                    
+
                                     // 삭제 버튼
                                     Positioned(
                                       top: 8,
                                       right: 8,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.black.withValues(alpha: 0.5),
+                                          color: Colors.black
+                                              .withValues(alpha: 0.5),
                                           shape: BoxShape.circle,
                                         ),
                                         child: IconButton(
@@ -228,11 +232,12 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                             color: Colors.white,
                                             size: 20,
                                           ),
-                                          onPressed: () => _deleteImage(imageFile),
+                                          onPressed: () =>
+                                              _deleteImage(imageFile),
                                         ),
                                       ),
                                     ),
-                                    
+
                                     // 파일명
                                     Positioned(
                                       bottom: 0,
@@ -246,7 +251,8 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                             end: Alignment.bottomCenter,
                                             colors: [
                                               Colors.transparent,
-                                              Colors.black.withValues(alpha: 0.7),
+                                              Colors.black
+                                                  .withValues(alpha: 0.7),
                                             ],
                                           ),
                                         ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../services/image_download_service.dart';
 
 /// 저장된 이미지 관리 화면

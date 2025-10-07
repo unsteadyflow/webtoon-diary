@@ -232,6 +232,7 @@ class ComicResultScreen extends StatelessWidget {
     if (quality == null) return;
 
     // 로딩 다이얼로그 표시
+    if (!context.mounted) return;
     showDialog(
       context: context,
       barrierDismissible: false,

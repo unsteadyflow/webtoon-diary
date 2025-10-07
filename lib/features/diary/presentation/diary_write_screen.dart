@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../services/diary_service.dart';
+import '../../comic/presentation/comic_generation_screen.dart';
 
 /// 일기 작성 화면
 class DiaryWriteScreen extends StatefulWidget {
@@ -144,15 +145,39 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   }
 
   /// AI 만화 생성 화면으로 이동
-  void _navigateToComicGeneration() {
-    // AI 만화 생성 화면으로 네비게이션 (추후 구현 예정)
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('AI 만화 생성 기능은 추후 구현 예정입니다.'),
-        backgroundColor: Colors.orange,
-      ),
-    );
+  void _navigateToComicGeneration() async {
+    // 일기 저장 후 만화 생성 시작
+    try {
+      final diary = await _diaryService.createDiary(
+        content: _contentController.text,
+        title: _titleController.text.trim().isEmpty ? null : _titleController.text,
+        mood: _selectedMood,
+        weather: _selectedWeather,
+        location: _selectedLocation,
+        isDraft: false,
+      );
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ComicGenerationScreen(
+              diary: diary,
+              style: 'cute', // 기본 스타일
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('일기 저장 실패: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override

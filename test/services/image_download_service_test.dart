@@ -11,7 +11,6 @@ import 'package:webtoon_diary/services/supabase_service.dart';
   SupabaseService,
   http.Client,
 ])
-import 'image_download_service_test.mocks.dart';
 
 void main() {
   group('ImageDownloadService', () {

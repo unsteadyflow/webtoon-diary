@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 
 import 'package:webtoon_diary/features/comic/presentation/comic_result_screen.dart';
 import 'package:webtoon_diary/core/models/comic.dart';
-import 'package:webtoon_diary/services/image_download_service.dart';
-
-// Mock 클래스 생성
-@GenerateMocks([ImageDownloadService])
-import 'comic_result_screen_test.mocks.dart';
 
 void main() {
   group('ComicResultScreen', () {
-    late MockImageDownloadService mockImageDownloadService;
     late Comic testComic;
 
     setUp(() {
-      mockImageDownloadService = MockImageDownloadService();
-      
       testComic = Comic(
         id: 'test-comic-id',
         diaryId: 'test-diary-id',

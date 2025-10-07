@@ -46,6 +46,10 @@ dependencies:
   
   # 파일 저장
   file_saver: ^0.2.0
+  
+  # 소셜 로그인
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^6.1.0
 
 dev_dependencies:
   flutter_test:

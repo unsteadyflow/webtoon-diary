@@ -396,8 +396,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final isInvalidCredentials = errorMessage.contains('올바르지 않습니다') ||
           errorMessage.toLowerCase().contains('invalid');
 
-      // AppSnackBar를 사용하여 일관된 에러 메시지 표시
-      AppSnackBar.error(
+      // AppSnackbar를 사용하여 일관된 에러 메시지 표시
+      AppSnackbar.showError(
         context,
         errorMessage,
         duration: const Duration(seconds: 5),

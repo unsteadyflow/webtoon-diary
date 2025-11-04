@@ -69,14 +69,10 @@ class AuthService {
       // 디버깅을 위한 상세 로그
       if (e is AuthException) {
         debugPrint('AuthException: ${e.message}');
+        debugPrint('AuthException statusCode: ${e.statusCode}');
         debugPrint('AuthException code: ${e.statusCode}');
         
-        // "Invalid login credentials" 오류를 더 명확하게 처리
-        if (e.message.toLowerCase().contains('invalid login credentials') ||
-            e.message.toLowerCase().contains('invalid credentials') ||
-            e.statusCode == 400) {
-          // AuthException을 그대로 전달하여 AuthProvider에서 처리
-        }
+        // "Invalid login credentials" 오류는 AuthProvider에서 처리
       } else {
         debugPrint('Login error: $e');
         debugPrint('Error type: ${e.runtimeType}');

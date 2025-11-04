@@ -206,7 +206,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                             if (kIsWeb || imageFile is! file_io.File) {
                               return const SizedBox.shrink();
                             }
-                            final file = imageFile as file_io.File;
+                            final file = imageFile;
                             return Card(
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(

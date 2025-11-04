@@ -5,12 +5,15 @@ import '../../../services/diary_service.dart';
 
 /// 일기 상세 화면
 class DiaryDetailScreen extends StatefulWidget {
-  final Diary diary;
+  final String? diaryId;
+  final Diary? diary;
 
   const DiaryDetailScreen({
     super.key,
-    required this.diary,
-  });
+    this.diaryId,
+    this.diary,
+  }) : assert(diaryId != null || diary != null,
+            'diaryId 또는 diary 중 하나는 필수입니다.');
 
   @override
   State<DiaryDetailScreen> createState() => _DiaryDetailScreenState();
@@ -18,13 +21,47 @@ class DiaryDetailScreen extends StatefulWidget {
 
 class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   final DiaryService _diaryService = DiaryService.instance;
-  late Diary _diary;
+  Diary? _diary;
   bool _isLoading = false;
+  bool _isLoadingDiary = false;
 
   @override
   void initState() {
     super.initState();
-    _diary = widget.diary;
+    if (widget.diary != null) {
+      _diary = widget.diary;
+    } else if (widget.diaryId != null) {
+      _loadDiary(widget.diaryId!);
+    }
+  }
+
+  /// 일기 로드
+  Future<void> _loadDiary(String diaryId) async {
+    setState(() {
+      _isLoadingDiary = true;
+    });
+
+    try {
+      final diary = await _diaryService.getDiary(diaryId);
+      if (mounted) {
+        setState(() {
+          _diary = diary;
+          _isLoadingDiary = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingDiary = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('일기를 불러오는 중 오류가 발생했습니다: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   /// 일기 삭제
@@ -48,13 +85,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed == true && _diary != null) {
       setState(() {
         _isLoading = true;
       });
 
       try {
-        await _diaryService.deleteDiary(_diary.id);
+        await _diaryService.deleteDiary(_diary!.id);
 
         if (mounted) {
           Navigator.pop(context, true); // 삭제 완료 신호
@@ -86,10 +123,12 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   /// 일기 수정
   Future<void> _editDiary() async {
+    if (_diary == null) return;
+    
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DiaryEditScreen(diary: _diary),
+        builder: (context) => DiaryEditScreen(diary: _diary!),
       ),
     );
 
@@ -106,9 +145,26 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoadingDiary || _diary == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('일기'),
+          backgroundColor: const Color(0xFF00D884),
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00D884)),
+          ),
+        ),
+      );
+    }
+
+    final diary = _diary!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(_diary.title ?? '일기'),
+        title: Text(diary.title ?? '일기'),
         backgroundColor: const Color(0xFF00D884),
         foregroundColor: Colors.white,
         actions: [
@@ -168,9 +224,9 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 제목
-            if (_diary.title != null)
+            if (diary.title != null)
               Text(
-                _diary.title!,
+                diary.title!,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -186,7 +242,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
             // 내용
             Text(
-              _diary.content,
+              diary.content,
               style: const TextStyle(
                 fontSize: 16,
                 height: 1.6,
@@ -196,7 +252,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
             const SizedBox(height: 30),
 
             // AI 만화 생성 버튼 (임시저장이 아닌 경우만)
-            if (!_diary.isDraft)
+            if (!diary.isDraft)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -229,6 +285,8 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
 
   /// 메타 정보 위젯
   Widget _buildMetaInfo() {
+    final diary = _diary!;
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -239,30 +297,30 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
       child: Column(
         children: [
           // 기분과 날씨
-          if (_diary.mood != null || _diary.weather != null)
+          if (diary.mood != null || diary.weather != null)
             Row(
               children: [
-                if (_diary.mood != null)
+                if (diary.mood != null)
                   Row(
                     children: [
                       const Text('기분: '),
                       Text(
-                        _diary.mood!,
+                        diary.mood!,
                         style: const TextStyle(fontSize: 20),
                       ),
                     ],
                   ),
-                if (_diary.mood != null && _diary.weather != null)
+                if (diary.mood != null && diary.weather != null)
                   const SizedBox(width: 20),
-                if (_diary.weather != null) Text('날씨: ${_diary.weather}'),
+                if (diary.weather != null) Text('날씨: ${diary.weather}'),
               ],
             ),
 
-          if (_diary.mood != null || _diary.weather != null)
+          if (diary.mood != null || diary.weather != null)
             const SizedBox(height: 12),
 
           // 위치
-          if (_diary.location != null)
+          if (diary.location != null)
             Row(
               children: [
                 Icon(
@@ -272,13 +330,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  _diary.location!,
+                  diary.location!,
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ],
             ),
 
-          if (_diary.location != null) const SizedBox(height: 12),
+          if (diary.location != null) const SizedBox(height: 12),
 
           // 작성일과 수정일
           Row(
@@ -296,13 +354,13 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                     ),
                     Text(
                       DateFormat('yyyy년 MM월 dd일 HH:mm')
-                          .format(_diary.createdAt),
+                          .format(diary.createdAt),
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
               ),
-              if (_diary.updatedAt != _diary.createdAt)
+              if (diary.updatedAt != diary.createdAt)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +374,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                       ),
                       Text(
                         DateFormat('yyyy년 MM월 dd일 HH:mm')
-                            .format(_diary.updatedAt),
+                            .format(diary.updatedAt),
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -326,7 +384,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
           ),
 
           // 상태 표시
-          if (_diary.isDraft)
+          if (diary.isDraft)
             Container(
               margin: const EdgeInsets.only(top: 12),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

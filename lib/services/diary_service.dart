@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/models/diary.dart';
+import '../core/models/diary_comic.dart';
+import '../core/models/comic.dart';
 import 'supabase_service.dart';
 
 /// 일기 서비스 클래스
@@ -155,6 +157,79 @@ class DiaryService {
     } catch (e) {
       // 로컬에서 찾기
       return await _getLocalDraft(diaryId);
+    }
+  }
+
+  /// 메인 피드용 일기와 만화 조회
+  /// 날짜/최신순으로 정렬된 일기와 해당 만화를 함께 반환
+  Future<List<DiaryComic>> getDiaryComicsFeed({
+    bool includeDrafts = false,
+    int? limit,
+    int? offset,
+  }) async {
+    try {
+      final user = _supabaseService.currentUser;
+      if (user == null) {
+        throw Exception('로그인이 필요합니다.');
+      }
+
+      // 일기 조회 (최신순 정렬)
+      var diaryQuery = _supabaseService.client
+          .from('diaries')
+          .select()
+          .eq('user_id', user.id)
+          .eq('is_draft', includeDrafts)
+          .order('created_at', ascending: false);
+
+      if (limit != null) {
+        diaryQuery = diaryQuery.limit(limit);
+      }
+      if (offset != null) {
+        diaryQuery = diaryQuery.range(offset, offset + (limit ?? 100) - 1);
+      }
+
+      final diariesResponse = await diaryQuery;
+      final diaries = (diariesResponse as List)
+          .map<Diary>((json) => Diary.fromJson(json))
+          .toList();
+
+      // 각 일기에 대해 만화 조회
+      final diaryComics = <DiaryComic>[];
+      for (final diary in diaries) {
+        try {
+          // 해당 일기의 만화 조회 (완료된 만화만)
+          final comicsResponse = await _supabaseService.client
+              .from('comics')
+              .select()
+              .eq('diary_id', diary.id)
+              .eq('status', 'completed')
+              .order('created_at', ascending: false)
+              .limit(1)
+              .maybeSingle();
+
+          Comic? comic;
+          if (comicsResponse != null) {
+            comic = Comic.fromJson(comicsResponse);
+          }
+
+          diaryComics.add(DiaryComic(diary: diary, comic: comic));
+        } catch (e) {
+          // 만화 조회 실패 시 만화 없이 일기만 추가
+          diaryComics.add(DiaryComic(diary: diary));
+        }
+      }
+
+      return diaryComics;
+    } catch (e) {
+      // 네트워크 오류 시 로컬 데이터 반환 (만화는 제외)
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
+        final localDrafts = await _getLocalDrafts();
+        return localDrafts
+            .map((diary) => DiaryComic(diary: diary))
+            .toList();
+      }
+      rethrow;
     }
   }
 

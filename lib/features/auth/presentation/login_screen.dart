@@ -388,11 +388,19 @@ class _LoginScreenState extends State<LoginScreen> {
       // 로그인 성공 시 홈 화면으로 이동
       Navigator.pushReplacementNamed(context, '/home');
     } else if (mounted) {
-      // 에러 메시지 표시
+      // 에러 메시지 표시 (더 명확한 메시지)
+      final errorMessage = authProvider.errorMessage ?? '로그인에 실패했습니다';
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.errorMessage ?? '로그인에 실패했습니다'),
+          content: Text(errorMessage),
           backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: '확인',
+            textColor: Colors.white,
+            onPressed: () {},
+          ),
         ),
       );
     }

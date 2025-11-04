@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../profile/presentation/profile_screen.dart';
-import '../../diary/presentation/diary_write_screen.dart';
 import '../../diary/presentation/diary_list_screen.dart';
 import '../../comic/presentation/saved_images_screen.dart';
+import 'feed_screen.dart';
 
 /// 홈 화면
 ///
@@ -83,35 +83,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.auto_stories,
-              size: 100,
-              color: Color(0xFF00D884),
-            ),
-            SizedBox(height: 20),
-            Text(
-              '웹툰 다이어리에 오신 것을 환영합니다!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 10),
-            Text(
-              'AI를 활용해 일상을 4컷 만화로 만들어보세요',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToDiaryWrite(context),
-        backgroundColor: const Color(0xFF00D884),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+      body: const FeedScreen(),
     );
   }
 
@@ -163,15 +135,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// 일기 작성 화면으로 이동
-  void _navigateToDiaryWrite(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const DiaryWriteScreen(),
-      ),
-    );
-  }
 
   /// 일기 목록 화면으로 이동
   void _navigateToDiaryList(BuildContext context) {

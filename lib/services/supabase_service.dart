@@ -67,10 +67,21 @@ class SupabaseService {
     required String email,
     required String password,
   }) async {
-    return await client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      final response = await client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      return response;
+    } catch (e) {
+      // 상세 에러 정보 로깅
+      print('Supabase signInWithPassword error:');
+      print('Error: $e');
+      if (e is AuthException) {
+        print('AuthException message: ${e.message}');
+      }
+      rethrow;
+    }
   }
 
   /// 로그아웃

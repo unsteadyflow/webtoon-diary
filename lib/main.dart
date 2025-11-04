@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'services/supabase_service.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/widgets/auth_wrapper.dart';
+import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,36 +39,7 @@ class WebtoonDiaryApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: '웹툰 다이어리',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF00D884),
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF00D884),
-            foregroundColor: Colors.white,
-            elevation: 0,
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00D884),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF00D884), width: 2),
-            ),
-          ),
-        ),
+        theme: AppTheme.lightTheme,
         home: const AuthWrapper(),
         routes: {
           '/login': (context) => const AuthWrapper(),

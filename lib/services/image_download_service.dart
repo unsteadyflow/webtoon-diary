@@ -1,10 +1,13 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'supabase_service.dart';
+
+// 플랫폼별 import
+import 'dart:io' if (dart.library.html) 'dart:html' as html;
 
 /// 이미지 다운로드 옵션
 enum ImageQuality {
@@ -39,14 +42,30 @@ class ImageDownloadService {
       // 이미지 다운로드
       final imageBytes = await _downloadImage(imageUrl, quality);
 
-      // 로컬 저장 경로 생성
-      final savePath = await _getSavePath(fileName);
+      if (kIsWeb) {
+        // 웹에서는 브라우저 다운로드 사용
+        // ignore: avoid_web_libraries_in_flutter
+        final blob = html.Blob([imageBytes]);
+        // ignore: avoid_web_libraries_in_flutter
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        // ignore: avoid_web_libraries_in_flutter
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute('download', fileName);
+        anchor.click();
+        // ignore: avoid_web_libraries_in_flutter
+        html.Url.revokeObjectUrl(url);
+        return fileName;
+      } else {
+        // 로컬 저장 경로 생성
+        final savePath = await _getSavePath(fileName);
 
-      // 파일 저장
-      final file = File(savePath);
-      await file.writeAsBytes(imageBytes);
+        // 파일 저장
+        // ignore: undefined_platform, File is available on non-web platforms
+        final file = File(savePath);
+        await file.writeAsBytes(imageBytes);
 
-      return savePath;
+        return savePath;
+      }
     } catch (e) {
       throw Exception('이미지 다운로드 실패: $e');
     }
@@ -67,14 +86,30 @@ class ImageDownloadService {
           .from(bucketName)
           .download(fileName);
 
-      // 로컬 저장 경로 생성
-      final savePath = await _getSavePath(fileName);
+      if (kIsWeb) {
+        // 웹에서는 브라우저 다운로드 사용
+        // ignore: avoid_web_libraries_in_flutter
+        final blob = html.Blob([imageBytes]);
+        // ignore: avoid_web_libraries_in_flutter
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        // ignore: avoid_web_libraries_in_flutter
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute('download', fileName);
+        anchor.click();
+        // ignore: avoid_web_libraries_in_flutter
+        html.Url.revokeObjectUrl(url);
+        return fileName;
+      } else {
+        // 로컬 저장 경로 생성
+        final savePath = await _getSavePath(fileName);
 
-      // 파일 저장
-      final file = File(savePath);
-      await file.writeAsBytes(imageBytes);
+        // 파일 저장
+        // ignore: undefined_platform, File is available on non-web platforms
+        final file = File(savePath);
+        await file.writeAsBytes(imageBytes);
 
-      return savePath;
+        return savePath;
+      }
     } catch (e) {
       throw Exception('Supabase Storage 다운로드 실패: $e');
     }
@@ -82,7 +117,13 @@ class ImageDownloadService {
 
   /// 저장 권한 요청
   Future<void> _requestStoragePermission() async {
+    // 웹에서는 권한 요청 불필요
+    if (kIsWeb) {
+      return;
+    }
+
     // Android에서는 storage 권한, iOS에서는 photos 권한 사용
+    // ignore: undefined_platform, Platform is available on non-web platforms
     Permission permission =
         Platform.isAndroid ? Permission.storage : Permission.photos;
 
@@ -122,7 +163,16 @@ class ImageDownloadService {
 
   /// 저장 경로 생성
   Future<String> _getSavePath(String fileName) async {
+    if (kIsWeb) {
+      // 웹에서는 파일명만 반환
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final nameWithoutExt = path.basenameWithoutExtension(fileName);
+      final extension = path.extension(fileName);
+      return '${nameWithoutExt}_$timestamp$extension';
+    }
+
     final directory = await getApplicationDocumentsDirectory();
+    // ignore: undefined_platform, Directory is available on non-web platforms
     final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
 
     // Downloads 디렉토리가 없으면 생성
@@ -140,7 +190,12 @@ class ImageDownloadService {
   }
 
   /// 저장된 이미지 목록 조회
-  Future<List<File>> getSavedImages() async {
+  Future<List<dynamic>> getSavedImages() async {
+    if (kIsWeb) {
+      // 웹에서는 로컬 파일 시스템 접근 불가
+      return [];
+    }
+
     try {
       final directory = await getApplicationDocumentsDirectory();
       final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
@@ -151,6 +206,7 @@ class ImageDownloadService {
 
       final files = await downloadsDir.list().toList();
       return files
+          // ignore: undefined_platform, File is available on non-web platforms
           .whereType<File>()
           .where((file) => isImageFile(file.path))
           .toList();
@@ -168,7 +224,13 @@ class ImageDownloadService {
 
   /// 저장된 이미지 삭제
   Future<void> deleteSavedImage(String filePath) async {
+    if (kIsWeb) {
+      // 웹에서는 로컬 파일 삭제 불가
+      return;
+    }
+
     try {
+      // ignore: undefined_platform, File is available on non-web platforms
       final file = File(filePath);
       if (await file.exists()) {
         await file.delete();
@@ -180,6 +242,11 @@ class ImageDownloadService {
 
   /// 저장 공간 사용량 조회
   Future<int> getStorageUsage() async {
+    if (kIsWeb) {
+      // 웹에서는 저장 공간 사용량 조회 불가
+      return 0;
+    }
+
     try {
       final directory = await getApplicationDocumentsDirectory();
       final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
@@ -190,8 +257,9 @@ class ImageDownloadService {
 
       int totalSize = 0;
       await for (final entity in downloadsDir.list(recursive: true)) {
+        // ignore: undefined_platform, File is available on non-web platforms
         if (entity is File && isImageFile(entity.path)) {
-          totalSize += await entity.length();
+          totalSize += (await entity.length()).toInt();
         }
       }
 

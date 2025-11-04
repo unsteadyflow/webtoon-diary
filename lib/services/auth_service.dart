@@ -65,6 +65,13 @@ class AuthService {
       return response;
     } catch (e) {
       // ❌ 로그인 실패: $e
+      // 디버깅을 위한 상세 로그
+      if (e is AuthException) {
+        print('AuthException: ${e.message}');
+      } else {
+        print('Login error: $e');
+        print('Error type: ${e.runtimeType}');
+      }
       rethrow;
     }
   }

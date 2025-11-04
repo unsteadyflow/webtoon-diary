@@ -1,5 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import '../../../core/models/comic.dart';
 import '../../../services/image_download_service.dart';
 
@@ -185,14 +190,89 @@ class ComicResultScreen extends StatelessWidget {
     );
   }
 
-  void _shareComic(BuildContext context) {
-    // TODO: SNS 공유 기능 구현
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('공유 기능은 추후 구현 예정입니다.'),
-        backgroundColor: Colors.orange,
-      ),
-    );
+  /// 만화 이미지 공유
+  Future<void> _shareComic(BuildContext context) async {
+    try {
+      // 로딩 다이얼로그 표시
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 16),
+              Text('공유 준비 중...'),
+            ],
+          ),
+        ),
+      );
+
+      // 이미지를 임시 파일로 다운로드
+      final tempFile = await _downloadImageToTempFile(comic.imageUrl);
+
+      // 로딩 다이얼로그 닫기
+      if (!context.mounted) return;
+      Navigator.pop(context);
+
+      // 공유 메시지 생성
+      final shareText = '${comic.title}\n\n'
+          'AI로 만든 4컷 만화를 확인해보세요! 🎨\n'
+          '#웹툰다이어리 #AI만화 #일기만화';
+
+      // 이미지와 텍스트 공유
+      await Share.shareXFiles(
+        [XFile(tempFile.path)],
+        text: shareText,
+        subject: comic.title,
+      );
+
+      // 임시 파일 삭제
+      try {
+        await tempFile.delete();
+      } catch (e) {
+        // 파일 삭제 실패는 무시
+      }
+    } catch (e) {
+      // 로딩 다이얼로그 닫기
+      if (context.mounted) {
+        Navigator.pop(context);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('공유 실패: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  /// 이미지를 임시 파일로 다운로드
+  Future<File> _downloadImageToTempFile(String imageUrl) async {
+    try {
+      // 이미지 다운로드
+      final response = await http.get(Uri.parse(imageUrl));
+      
+      if (response.statusCode != 200) {
+        throw Exception('이미지 다운로드 실패: HTTP ${response.statusCode}');
+      }
+
+      // 임시 디렉토리 가져오기
+      final tempDir = await getTemporaryDirectory();
+      final fileName = 'comic_share_${DateTime.now().millisecondsSinceEpoch}.png';
+      final tempPath = path.join(tempDir.path, fileName);
+
+      // 임시 파일에 저장
+      final tempFile = File(tempPath);
+      await tempFile.writeAsBytes(response.bodyBytes);
+
+      return tempFile;
+    } catch (e) {
+      throw Exception('이미지 다운로드 실패: $e');
+    }
   }
 
   void _downloadComic(BuildContext context) async {

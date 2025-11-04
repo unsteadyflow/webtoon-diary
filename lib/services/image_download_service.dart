@@ -183,7 +183,7 @@ class ImageDownloadService {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
+      final downloadsDir = file_io.Directory(path.join(directory.path, 'Downloads'));
 
       if (!await downloadsDir.exists()) {
         return [];
@@ -232,7 +232,7 @@ class ImageDownloadService {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
+      final downloadsDir = file_io.Directory(path.join(directory.path, 'Downloads'));
 
       if (!await downloadsDir.exists()) {
         return 0;

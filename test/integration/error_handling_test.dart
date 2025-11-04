@@ -149,7 +149,7 @@ void main() {
 
       // null 값 처리
       String? nullableString;
-      expect(nullableString == null, isTrue);
+      expect(nullableString, isNull);
 
       nullableString = '';
       expect(nullableString.isEmpty, isTrue);

@@ -1,6 +1,10 @@
 // 웹 전용 이미지 다운로드 함수
 // 이 파일은 웹에서만 사용되며, 조건부 import로 처리됩니다.
+// NOTE: dart:html은 deprecated되었지만, Flutter 웹에서 아직 널리 사용되므로
+//       향후 package:web으로 마이그레이션 예정
 
+// ignore: avoid_web_libraries_in_flutter
+// ignore: deprecated_member_use
 import 'dart:html' as html;
 import 'dart:typed_data';
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -75,10 +76,10 @@ class SupabaseService {
       return response;
     } catch (e) {
       // 상세 에러 정보 로깅
-      print('Supabase signInWithPassword error:');
-      print('Error: $e');
+      debugPrint('Supabase signInWithPassword error:');
+      debugPrint('Error: $e');
       if (e is AuthException) {
-        print('AuthException message: ${e.message}');
+        debugPrint('AuthException message: ${e.message}');
       }
       rethrow;
     }

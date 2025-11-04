@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'supabase_service.dart';
 
@@ -67,10 +68,10 @@ class AuthService {
       // ❌ 로그인 실패: $e
       // 디버깅을 위한 상세 로그
       if (e is AuthException) {
-        print('AuthException: ${e.message}');
+        debugPrint('AuthException: ${e.message}');
       } else {
-        print('Login error: $e');
-        print('Error type: ${e.runtimeType}');
+        debugPrint('Login error: $e');
+        debugPrint('Error type: ${e.runtimeType}');
       }
       rethrow;
     }

@@ -124,12 +124,12 @@ class AuthProvider extends ChangeNotifier {
       return false;
     } catch (e) {
       // 에러 상세 정보 로깅
-      print('Sign in error details:');
-      print('Error: $e');
-      print('Error type: ${e.runtimeType}');
+      debugPrint('Sign in error details:');
+      debugPrint('Error: $e');
+      debugPrint('Error type: ${e.runtimeType}');
       
       if (e is AuthException) {
-        print('AuthException message: ${e.message}');
+        debugPrint('AuthException message: ${e.message}');
       }
       
       _setError(_getErrorMessage(e));

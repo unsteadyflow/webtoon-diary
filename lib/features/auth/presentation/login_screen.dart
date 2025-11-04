@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/widgets/app_snackbar.dart';
 import 'sign_up_screen.dart';
 import 'reset_password_screen.dart';
 
@@ -391,17 +392,29 @@ class _LoginScreenState extends State<LoginScreen> {
       // 에러 메시지 표시 (더 명확한 메시지)
       final errorMessage = authProvider.errorMessage ?? '로그인에 실패했습니다';
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-          action: SnackBarAction(
-            label: '확인',
-            textColor: Colors.white,
-            onPressed: () {},
-          ),
-        ),
+      // 에러 메시지가 "Invalid login credentials"인 경우 더 친절한 안내 추가
+      final isInvalidCredentials = errorMessage.contains('올바르지 않습니다') ||
+          errorMessage.toLowerCase().contains('invalid');
+
+      // AppSnackBar를 사용하여 일관된 에러 메시지 표시
+      AppSnackBar.error(
+        context,
+        errorMessage,
+        duration: const Duration(seconds: 5),
+        action: isInvalidCredentials
+            ? SnackBarAction(
+                label: '회원가입',
+                textColor: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpScreen(),
+                    ),
+                  );
+                },
+              )
+            : null,
       );
     }
   }

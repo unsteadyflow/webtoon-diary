@@ -7,7 +7,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'supabase_service.dart';
 
 // 플랫폼별 import
-import 'dart:io' if (dart.library.html) 'dart:html' as html;
+import 'dart:io' if (dart.library.html) 'dart:html' as io;
+
+// 웹 전용 함수 import
+import 'image_download_service_web.dart' if (dart.library.io) 'image_download_service_stub.dart' as web;
 
 /// 이미지 다운로드 옵션
 enum ImageQuality {
@@ -44,24 +47,13 @@ class ImageDownloadService {
 
       if (kIsWeb) {
         // 웹에서는 브라우저 다운로드 사용
-        // ignore: avoid_web_libraries_in_flutter
-        final blob = html.Blob([imageBytes]);
-        // ignore: avoid_web_libraries_in_flutter
-        final url = html.Url.createObjectUrlFromBlob(blob);
-        // ignore: avoid_web_libraries_in_flutter
-        final anchor = html.AnchorElement(href: url)
-          ..setAttribute('download', fileName);
-        anchor.click();
-        // ignore: avoid_web_libraries_in_flutter
-        html.Url.revokeObjectUrl(url);
-        return fileName;
+        return web.downloadImageOnWeb(imageBytes, fileName);
       } else {
         // 로컬 저장 경로 생성
         final savePath = await _getSavePath(fileName);
 
         // 파일 저장
-        // ignore: undefined_platform, File is available on non-web platforms
-        final file = File(savePath);
+        final file = io.File(savePath);
         await file.writeAsBytes(imageBytes);
 
         return savePath;
@@ -88,24 +80,13 @@ class ImageDownloadService {
 
       if (kIsWeb) {
         // 웹에서는 브라우저 다운로드 사용
-        // ignore: avoid_web_libraries_in_flutter
-        final blob = html.Blob([imageBytes]);
-        // ignore: avoid_web_libraries_in_flutter
-        final url = html.Url.createObjectUrlFromBlob(blob);
-        // ignore: avoid_web_libraries_in_flutter
-        final anchor = html.AnchorElement(href: url)
-          ..setAttribute('download', fileName);
-        anchor.click();
-        // ignore: avoid_web_libraries_in_flutter
-        html.Url.revokeObjectUrl(url);
-        return fileName;
+        return web.downloadImageOnWeb(imageBytes, fileName);
       } else {
         // 로컬 저장 경로 생성
         final savePath = await _getSavePath(fileName);
 
         // 파일 저장
-        // ignore: undefined_platform, File is available on non-web platforms
-        final file = File(savePath);
+        final file = io.File(savePath);
         await file.writeAsBytes(imageBytes);
 
         return savePath;
@@ -123,9 +104,8 @@ class ImageDownloadService {
     }
 
     // Android에서는 storage 권한, iOS에서는 photos 권한 사용
-    // ignore: undefined_platform, Platform is available on non-web platforms
     Permission permission =
-        Platform.isAndroid ? Permission.storage : Permission.photos;
+        io.Platform.isAndroid ? Permission.storage : Permission.photos;
 
     final status = await permission.request();
 
@@ -172,8 +152,7 @@ class ImageDownloadService {
     }
 
     final directory = await getApplicationDocumentsDirectory();
-    // ignore: undefined_platform, Directory is available on non-web platforms
-    final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
+    final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
 
     // Downloads 디렉토리가 없으면 생성
     if (!await downloadsDir.exists()) {
@@ -198,7 +177,7 @@ class ImageDownloadService {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
+      final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
 
       if (!await downloadsDir.exists()) {
         return [];
@@ -206,8 +185,7 @@ class ImageDownloadService {
 
       final files = await downloadsDir.list().toList();
       return files
-          // ignore: undefined_platform, File is available on non-web platforms
-          .whereType<File>()
+          .whereType<io.File>()
           .where((file) => isImageFile(file.path))
           .toList();
     } catch (e) {
@@ -230,8 +208,7 @@ class ImageDownloadService {
     }
 
     try {
-      // ignore: undefined_platform, File is available on non-web platforms
-      final file = File(filePath);
+      final file = io.File(filePath);
       if (await file.exists()) {
         await file.delete();
       }
@@ -249,7 +226,7 @@ class ImageDownloadService {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final downloadsDir = Directory(path.join(directory.path, 'Downloads'));
+      final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
 
       if (!await downloadsDir.exists()) {
         return 0;
@@ -257,8 +234,7 @@ class ImageDownloadService {
 
       int totalSize = 0;
       await for (final entity in downloadsDir.list(recursive: true)) {
-        // ignore: undefined_platform, File is available on non-web platforms
-        if (entity is File && isImageFile(entity.path)) {
+        if (entity is io.File && isImageFile(entity.path)) {
           totalSize += (await entity.length()).toInt();
         }
       }
@@ -268,6 +244,7 @@ class ImageDownloadService {
       return 0;
     }
   }
+
 
   /// 저장 공간 사용량을 사람이 읽기 쉬운 형태로 변환
   String formatStorageSize(int bytes) {

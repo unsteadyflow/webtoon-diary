@@ -25,18 +25,18 @@ class SentryService {
       return;
     }
 
-        try {
-          // 환경 변수에서 Sentry DSN 읽기
-          // NOTE: Sentry DSN은 선택적입니다. 필요시 config.env에 SENTRY_DSN을 추가하세요.
-          // 예: SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
-          // final sentryDsn = dotenv.env['SENTRY_DSN'];
+    try {
+      // 환경 변수에서 Sentry DSN 읽기
+      // NOTE: Sentry DSN은 선택적입니다. 필요시 config.env에 SENTRY_DSN을 추가하세요.
+      // 예: SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+      // final sentryDsn = dotenv.env['SENTRY_DSN'];
 
-          // DSN이 없으면 초기화하지 않음
-          // if (sentryDsn == null || sentryDsn.isEmpty) {
-          //   debugPrint('Sentry DSN not found, skipping initialization');
-          //   instance._isInitialized = true;
-          //   return;
-          // }
+      // DSN이 없으면 초기화하지 않음
+      // if (sentryDsn == null || sentryDsn.isEmpty) {
+      //   debugPrint('Sentry DSN not found, skipping initialization');
+      //   instance._isInitialized = true;
+      //   return;
+      // }
 
       await SentryFlutter.init(
         (options) {

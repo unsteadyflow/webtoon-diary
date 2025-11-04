@@ -3,9 +3,7 @@
 // NOTE: dart:html은 deprecated되었지만, Flutter 웹에서 아직 널리 사용되므로
 //       향후 package:web으로 마이그레이션 예정
 
-// ignore: avoid_web_libraries_in_flutter
-// ignore: deprecated_member_use
-import 'dart:html' as html;
+import 'dart:html' as html; // ignore: avoid_web_libraries_in_flutter, deprecated_member_use
 import 'dart:typed_data';
 
 /// 웹에서 이미지 다운로드 (별도 파일로 분리)

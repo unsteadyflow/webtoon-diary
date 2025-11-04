@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../../services/image_download_service.dart';
 
-// File 타입을 조건부로 사용하기 위한 타입 별칭
-import 'dart:io' if (dart.library.html) 'dart:html' as io;
+// 비웹 플랫폼용 File 타입
+import '../../../services/file_io_stub.dart' if (dart.library.html) '../../../services/file_io_stub_web.dart' as file_io;
 
 /// 저장된 이미지 관리 화면
 class SavedImagesScreen extends StatefulWidget {
@@ -39,7 +39,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
       setState(() {
         // 웹이 아닌 경우에만 File 타입으로 캐스팅
         if (!kIsWeb) {
-          _savedImages = images.cast<io.File>();
+          _savedImages = images.cast<file_io.File>();
         } else {
           _savedImages = [];
         }
@@ -84,7 +84,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
 
     if (confirmDelete == true) {
       try {
-        final filePath = kIsWeb ? '' : (imageFile as io.File).path;
+        final filePath = kIsWeb ? '' : (imageFile as file_io.File).path;
         if (!kIsWeb) {
           await _imageDownloadService.deleteSavedImage(filePath);
         }
@@ -203,10 +203,10 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                           itemCount: _savedImages.length,
                           itemBuilder: (context, index) {
                             final imageFile = _savedImages[index];
-                            if (kIsWeb || imageFile is! io.File) {
+                            if (kIsWeb || imageFile is! file_io.File) {
                               return const SizedBox.shrink();
                             }
-                            final file = imageFile;
+                            final file = imageFile as file_io.File;
                             return Card(
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(
@@ -214,8 +214,9 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                 child: Stack(
                                   children: [
                                     // 이미지
+                                    // ignore: undefined_platform, Image.file requires dart:io File
                                     Image.file(
-                                      file,
+                                      file as dynamic,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
@@ -308,14 +309,15 @@ class ImageViewerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text((imageFile as io.File).path.split('/').last),
+        title: Text((imageFile as file_io.File).path.split('/').last),
         backgroundColor: const Color(0xFF00D884),
         foregroundColor: Colors.white,
       ),
       body: Center(
         child: InteractiveViewer(
+          // ignore: undefined_platform, Image.file requires dart:io File
           child: Image.file(
-            imageFile as io.File,
+            imageFile as dynamic,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               return const Center(

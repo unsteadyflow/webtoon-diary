@@ -9,6 +9,9 @@ import 'supabase_service.dart';
 // 플랫폼별 import
 import 'dart:io' if (dart.library.html) 'dart:html' as io;
 
+// 비웹 플랫폼용 File/Directory/Platform 타입
+import 'file_io_stub.dart' if (dart.library.html) 'file_io_stub_web.dart' as file_io;
+
 // 웹 전용 함수 import
 import 'image_download_service_web.dart'
     if (dart.library.io) 'image_download_service_stub.dart' as web;
@@ -54,7 +57,7 @@ class ImageDownloadService {
         final savePath = await _getSavePath(fileName);
 
         // 파일 저장
-        final file = io.File(savePath);
+        final file = file_io.File(savePath);
         await file.writeAsBytes(imageBytes);
 
         return savePath;
@@ -87,7 +90,7 @@ class ImageDownloadService {
         final savePath = await _getSavePath(fileName);
 
         // 파일 저장
-        final file = io.File(savePath);
+        final file = file_io.File(savePath);
         await file.writeAsBytes(imageBytes);
 
         return savePath;
@@ -105,8 +108,9 @@ class ImageDownloadService {
     }
 
     // Android에서는 storage 권한, iOS에서는 photos 권한 사용
-    Permission permission =
-        io.Platform.isAndroid ? Permission.storage : Permission.photos;
+    Permission permission = file_io.Platform.isAndroid
+        ? Permission.storage
+        : Permission.photos;
 
     final status = await permission.request();
 
@@ -153,7 +157,8 @@ class ImageDownloadService {
     }
 
     final directory = await getApplicationDocumentsDirectory();
-    final downloadsDir = io.Directory(path.join(directory.path, 'Downloads'));
+    // ignore: undefined_platform, Directory is available on non-web platforms
+    final downloadsDir = file_io.Directory(path.join(directory.path, 'Downloads'));
 
     // Downloads 디렉토리가 없으면 생성
     if (!await downloadsDir.exists()) {
@@ -186,7 +191,7 @@ class ImageDownloadService {
 
       final files = await downloadsDir.list().toList();
       return files
-          .whereType<io.File>()
+          .whereType<file_io.File>()
           .where((file) => isImageFile(file.path))
           .toList();
     } catch (e) {
@@ -209,7 +214,7 @@ class ImageDownloadService {
     }
 
     try {
-      final file = io.File(filePath);
+      final file = file_io.File(filePath);
       if (await file.exists()) {
         await file.delete();
       }
@@ -235,7 +240,7 @@ class ImageDownloadService {
 
       int totalSize = 0;
       await for (final entity in downloadsDir.list(recursive: true)) {
-        if (entity is io.File && isImageFile(entity.path)) {
+        if (entity is file_io.File && isImageFile(entity.path)) {
           totalSize += (await entity.length()).toInt();
         }
       }

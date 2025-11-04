@@ -394,13 +394,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // 에러 메시지가 "Invalid login credentials"인 경우 더 친절한 안내 추가
       final isInvalidCredentials = errorMessage.contains('올바르지 않습니다') ||
+          errorMessage.contains('회원가입을 먼저') ||
           errorMessage.toLowerCase().contains('invalid');
 
       // AppSnackbar를 사용하여 일관된 에러 메시지 표시
       AppSnackbar.showError(
         context,
         errorMessage,
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 6),
         action: isInvalidCredentials
             ? SnackBarAction(
                 label: '회원가입',

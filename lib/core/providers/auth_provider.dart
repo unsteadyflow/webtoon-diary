@@ -220,8 +220,9 @@ class AuthProvider extends ChangeNotifier {
 
       // 에러 메시지 패턴 매칭
       if (message.contains('invalid login credentials') ||
-          message.contains('invalid credentials')) {
-        return '이메일 또는 비밀번호가 올바르지 않습니다.';
+          message.contains('invalid credentials') ||
+          error.code == 'invalid_credentials') {
+        return '이메일 또는 비밀번호가 올바르지 않습니다.\n계정이 없으시다면 회원가입을 먼저 진행해주세요.';
       }
 
       if (message.contains('email not confirmed') ||

@@ -51,7 +51,8 @@ void main() {
       );
 
       expect(diaryComicWithComic.hasComic, true);
-      expect(diaryComicWithComic.comicThumbnailUrl, 'https://example.com/comic.png');
+      expect(diaryComicWithComic.comicThumbnailUrl,
+          'https://example.com/comic.png');
     });
 
     test('피드 데이터 정렬 테스트', () {
@@ -129,4 +130,3 @@ void main() {
     });
   });
 }
-

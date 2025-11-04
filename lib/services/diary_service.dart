@@ -225,9 +225,7 @@ class DiaryService {
       if (e.toString().contains('network') ||
           e.toString().contains('connection')) {
         final localDrafts = await _getLocalDrafts();
-        return localDrafts
-            .map((diary) => DiaryComic(diary: diary))
-            .toList();
+        return localDrafts.map((diary) => DiaryComic(diary: diary)).toList();
       }
       rethrow;
     }

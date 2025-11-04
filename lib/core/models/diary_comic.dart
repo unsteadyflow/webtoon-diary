@@ -51,4 +51,3 @@ class DiaryComic {
   @override
   int get hashCode => diary.id.hashCode;
 }
-

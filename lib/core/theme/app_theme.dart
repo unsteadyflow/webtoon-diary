@@ -4,40 +4,40 @@ import 'package:flutter/material.dart';
 /// Design Guide 기반 컬러 팔레트 및 TextTheme 정의
 class AppTheme {
   // 컬러 정의 (Design Guide 기반)
-  
+
   /// Primary Color: Fresh Mint Green
   static const Color primaryColor = Color(0xFF00D884);
-  
+
   /// Secondary Color: Soft Lilac
   static const Color secondaryColor = Color(0xFFC9A8FF);
-  
+
   /// Accent 1: Peach Pink
   static const Color accent1 = Color(0xFFFF8FB3);
-  
+
   /// Accent 2: Sky Blue
   static const Color accent2 = Color(0xFF7EC8FF);
-  
+
   /// Accent 3: Sunny Yellow
   static const Color accent3 = Color(0xFFFFE36E);
-  
+
   /// Background: White
   static const Color background = Color(0xFFFFFFFF);
-  
+
   /// Background: Off White
   static const Color backgroundOffWhite = Color(0xFFFAFBFF);
-  
+
   /// Surface: Card Surface
   static const Color surface = Color(0xFFFFFFFF);
-  
+
   /// Text Primary
   static const Color textPrimary = Color(0xFF111318);
-  
+
   /// Text Secondary
   static const Color textSecondary = Color(0xFF5B5B66);
-  
+
   /// Line/Divider
   static const Color lineDivider = Color(0xFFEDECF2);
-  
+
   /// Grayscale
   static const Color grayscaleDark = Color(0xFF111318);
   static const Color grayscaleDark2 = Color(0xFF2A2E37);
@@ -45,12 +45,12 @@ class AppTheme {
   static const Color grayscaleLight = Color(0xFFC9CDD6);
   static const Color grayscaleLight2 = Color(0xFFE9ECF2);
   static const Color grayscaleLightest = Color(0xFFF6F7FB);
-  
+
   /// Status Colors
   static const Color success = Color(0xFF00C97A);
   static const Color warning = Color(0xFFFFA500);
   static const Color error = Color(0xFFFF5A5F);
-  
+
   /// App Theme 생성
   static ThemeData get lightTheme {
     return ThemeData(
@@ -78,7 +78,7 @@ class AppTheme {
       dividerTheme: _buildDividerTheme(),
     );
   }
-  
+
   /// TextTheme 정의 (Design Guide Type Scale 기반)
   static TextTheme _buildTextTheme() {
     return const TextTheme(
@@ -156,7 +156,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// AppBar Theme
   static AppBarTheme _buildAppBarTheme() {
     return const AppBarTheme(
@@ -171,7 +171,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// ElevatedButton Theme
   static ElevatedButtonThemeData _buildElevatedButtonTheme() {
     return ElevatedButtonThemeData(
@@ -192,7 +192,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// OutlinedButton Theme
   static OutlinedButtonThemeData _buildOutlinedButtonTheme() {
     return OutlinedButtonThemeData(
@@ -212,7 +212,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// TextButton Theme
   static TextButtonThemeData _buildTextButtonTheme() {
     return TextButtonThemeData(
@@ -227,7 +227,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// InputDecoration Theme
   static InputDecorationTheme _buildInputDecorationTheme() {
     return InputDecorationTheme(
@@ -264,7 +264,7 @@ class AppTheme {
       ),
     );
   }
-  
+
   /// Card Theme
   static CardThemeData _buildCardThemeData() {
     return CardThemeData(
@@ -279,7 +279,7 @@ class AppTheme {
       // Flutter에서는 elevation 대신 boxShadow를 직접 사용
     );
   }
-  
+
   /// Chip Theme
   static ChipThemeData _buildChipTheme() {
     return ChipThemeData(
@@ -303,7 +303,7 @@ class AppTheme {
       elevation: 0,
     );
   }
-  
+
   /// FloatingActionButton Theme
   static FloatingActionButtonThemeData _buildFloatingActionButtonTheme() {
     return const FloatingActionButtonThemeData(
@@ -317,7 +317,7 @@ class AppTheme {
       // Size: 56x56, 코너 28
     );
   }
-  
+
   /// Divider Theme
   static DividerThemeData _buildDividerTheme() {
     return const DividerThemeData(
@@ -327,4 +327,3 @@ class AppTheme {
     );
   }
 }
-

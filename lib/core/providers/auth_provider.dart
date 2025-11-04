@@ -114,24 +114,24 @@ class AuthProvider extends ChangeNotifier {
         _user = response.user;
         return true;
       }
-      
+
       // 응답에는 user가 없지만 세션이 있을 수 있음
       if (response.session != null) {
         _user = response.session?.user;
         return true;
       }
-      
+
       return false;
     } catch (e) {
       // 에러 상세 정보 로깅
       debugPrint('Sign in error details:');
       debugPrint('Error: $e');
       debugPrint('Error type: ${e.runtimeType}');
-      
+
       if (e is AuthException) {
         debugPrint('AuthException message: ${e.message}');
       }
-      
+
       _setError(_getErrorMessage(e));
       return false;
     } finally {
@@ -217,79 +217,76 @@ class AuthProvider extends ChangeNotifier {
     // Supabase AuthException 처리
     if (error is AuthException) {
       final message = error.message.toLowerCase();
-      
+
       // 에러 메시지 패턴 매칭
       if (message.contains('invalid login credentials') ||
           message.contains('invalid credentials')) {
         return '이메일 또는 비밀번호가 올바르지 않습니다.';
       }
-      
+
       if (message.contains('email not confirmed') ||
           message.contains('email_not_confirmed')) {
         return '이메일 인증이 필요합니다. 회원가입 시 발송된 이메일을 확인해주세요.';
       }
-      
+
       if (message.contains('user already registered') ||
           message.contains('user_already_registered')) {
         return '이미 등록된 이메일입니다.';
       }
-      
+
       if (message.contains('password should be at least') ||
           message.contains('password_too_short')) {
         return '비밀번호는 최소 6자 이상이어야 합니다.';
       }
-      
+
       if (message.contains('invalid email') ||
           message.contains('invalid_email')) {
         return '올바른 이메일 형식이 아닙니다.';
       }
-      
+
       if (message.contains('signup is disabled') ||
           message.contains('signup_disabled')) {
         return '회원가입이 비활성화되어 있습니다.';
       }
-      
+
       if (message.contains('email rate limit') ||
           message.contains('email_rate_limit')) {
         return '이메일 발송 횟수를 초과했습니다. 잠시 후 다시 시도해주세요.';
       }
-      
-      if (message.contains('bad request') ||
-          message.contains('400')) {
+
+      if (message.contains('bad request') || message.contains('400')) {
         return '요청이 잘못되었습니다. 이메일과 비밀번호를 확인해주세요.';
       }
-      
+
       // 원본 메시지 반환
       return error.message.isNotEmpty ? error.message : '인증 오류가 발생했습니다.';
     }
 
     // 문자열 에러 메시지 처리
     final errorString = error.toString().toLowerCase();
-    
+
     if (errorString.contains('sign_in_failed') ||
         errorString.contains('sign_in_failure')) {
       return '소셜 로그인에 실패했습니다. 다시 시도해주세요.';
     }
-    
+
     if (errorString.contains('network_error') ||
         errorString.contains('network') ||
         errorString.contains('connection')) {
       return '네트워크 연결을 확인해주세요.';
     }
-    
-    if (errorString.contains('bad request') ||
-        errorString.contains('400')) {
+
+    if (errorString.contains('bad request') || errorString.contains('400')) {
       return '요청이 잘못되었습니다. 입력 정보를 확인해주세요.';
     }
-    
-    if (errorString.contains('unauthorized') ||
-        errorString.contains('401')) {
+
+    if (errorString.contains('unauthorized') || errorString.contains('401')) {
       return '인증에 실패했습니다. 이메일과 비밀번호를 확인해주세요.';
     }
 
     // 기본 에러 메시지
-    return error.toString().isNotEmpty 
-        ? error.toString() 
+    return error.toString().isNotEmpty
+        ? error.toString()
         : '알 수 없는 오류가 발생했습니다.';
   }
 }

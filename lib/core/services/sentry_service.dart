@@ -29,7 +29,7 @@ class SentryService {
       // 환경 변수에서 Sentry DSN 읽기
       // TODO: config.env에 SENTRY_DSN 추가 필요
       // final sentryDsn = dotenv.env['SENTRY_DSN'];
-      
+
       // DSN이 없으면 초기화하지 않음
       // if (sentryDsn == null || sentryDsn.isEmpty) {
       //   debugPrint('Sentry DSN not found, skipping initialization');
@@ -41,16 +41,16 @@ class SentryService {
         (options) {
           // DSN 설정
           // options.dsn = sentryDsn;
-          
+
           // 환경 설정
           options.environment = kDebugMode ? 'development' : 'production';
-          
+
           // 트레이스 샘플링 (성능 모니터링)
           options.tracesSampleRate = 1.0; // 100% 샘플링 (프로덕션에서는 낮춤)
-          
+
           // 릴리즈 정보
           options.release = 'webtoon-diary@1.0.0';
-          
+
           // 에러 필터링 (필요시 주석 해제)
           // options.beforeSend = (event, {hint}) {
           //   // 모든 이벤트 전송 (필요시 필터링 로직 추가)
@@ -185,4 +185,3 @@ class SentryService {
     }
   }
 }
-

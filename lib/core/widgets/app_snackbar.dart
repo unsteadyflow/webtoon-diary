@@ -101,9 +101,8 @@ class AppSnackbar {
     SnackBarAction? action,
   }) {
     // 액션이 있으면 4초, 없으면 지정된 duration
-    final displayDuration = action != null
-        ? const Duration(seconds: 4)
-        : duration;
+    final displayDuration =
+        action != null ? const Duration(seconds: 4) : duration;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -141,4 +140,3 @@ class AppSnackbar {
     );
   }
 }
-

@@ -18,4 +18,3 @@ String downloadImageOnWeb(Uint8List imageBytes, String fileName) {
   html.Url.revokeObjectUrl(url);
   return fileName;
 }
-

@@ -12,8 +12,8 @@ class DiaryDetailScreen extends StatefulWidget {
     super.key,
     this.diaryId,
     this.diary,
-  }) : assert(diaryId != null || diary != null,
-            'diaryId 또는 diary 중 하나는 필수입니다.');
+  }) : assert(
+            diaryId != null || diary != null, 'diaryId 또는 diary 중 하나는 필수입니다.');
 
   @override
   State<DiaryDetailScreen> createState() => _DiaryDetailScreenState();
@@ -124,7 +124,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 일기 수정
   Future<void> _editDiary() async {
     if (_diary == null) return;
-    
+
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -286,7 +286,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
   /// 메타 정보 위젯
   Widget _buildMetaInfo() {
     final diary = _diary!;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -353,8 +353,7 @@ class _DiaryDetailScreenState extends State<DiaryDetailScreen> {
                       ),
                     ),
                     Text(
-                      DateFormat('yyyy년 MM월 dd일 HH:mm')
-                          .format(diary.createdAt),
+                      DateFormat('yyyy년 MM월 dd일 HH:mm').format(diary.createdAt),
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],

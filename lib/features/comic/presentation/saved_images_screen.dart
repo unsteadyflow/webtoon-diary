@@ -247,8 +247,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                             color: Colors.white,
                                             size: 20,
                                           ),
-                                          onPressed: () =>
-                                              _deleteImage(file),
+                                          onPressed: () => _deleteImage(file),
                                         ),
                                       ),
                                     ),

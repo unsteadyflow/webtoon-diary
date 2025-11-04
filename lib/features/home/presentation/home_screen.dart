@@ -135,7 +135,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-
   /// 일기 목록 화면으로 이동
   void _navigateToDiaryList(BuildContext context) {
     Navigator.push(

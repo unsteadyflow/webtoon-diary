@@ -390,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (mounted) {
       // 에러 메시지 표시 (더 명확한 메시지)
       final errorMessage = authProvider.errorMessage ?? '로그인에 실패했습니다';
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),

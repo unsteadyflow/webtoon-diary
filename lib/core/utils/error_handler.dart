@@ -29,13 +29,11 @@ class ErrorHandler {
       return ErrorType.authentication;
     }
 
-    if (errorString.contains('not found') ||
-        errorString.contains('404')) {
+    if (errorString.contains('not found') || errorString.contains('404')) {
       return ErrorType.notFound;
     }
 
-    if (errorString.contains('validation') ||
-        errorString.contains('invalid')) {
+    if (errorString.contains('validation') || errorString.contains('invalid')) {
       return ErrorType.validation;
     }
 
@@ -130,4 +128,3 @@ enum ErrorType {
   validation,
   unknown,
 }
-

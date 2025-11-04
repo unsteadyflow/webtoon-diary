@@ -7,4 +7,3 @@ import 'dart:typed_data';
 String downloadImageOnWeb(Uint8List imageBytes, String fileName) {
   throw UnsupportedError('downloadImageOnWeb is only available on web');
 }
-

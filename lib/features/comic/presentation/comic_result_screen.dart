@@ -238,7 +238,7 @@ class ComicResultScreen extends StatelessWidget {
       // 로딩 다이얼로그 닫기
       if (context.mounted) {
         Navigator.pop(context);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('공유 실패: $e'),
@@ -255,14 +255,15 @@ class ComicResultScreen extends StatelessWidget {
     try {
       // 이미지 다운로드
       final response = await http.get(Uri.parse(imageUrl));
-      
+
       if (response.statusCode != 200) {
         throw Exception('이미지 다운로드 실패: HTTP ${response.statusCode}');
       }
 
       // 임시 디렉토리 가져오기
       final tempDir = await getTemporaryDirectory();
-      final fileName = 'comic_share_${DateTime.now().millisecondsSinceEpoch}.png';
+      final fileName =
+          'comic_share_${DateTime.now().millisecondsSinceEpoch}.png';
       final tempPath = path.join(tempDir.path, fileName);
 
       // 임시 파일에 저장

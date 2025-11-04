@@ -10,7 +10,8 @@ import 'supabase_service.dart';
 import 'dart:io' if (dart.library.html) 'dart:html' as io;
 
 // 웹 전용 함수 import
-import 'image_download_service_web.dart' if (dart.library.io) 'image_download_service_stub.dart' as web;
+import 'image_download_service_web.dart'
+    if (dart.library.io) 'image_download_service_stub.dart' as web;
 
 /// 이미지 다운로드 옵션
 enum ImageQuality {
@@ -244,7 +245,6 @@ class ImageDownloadService {
       return 0;
     }
   }
-
 
   /// 저장 공간 사용량을 사람이 읽기 쉬운 형태로 변환
   String formatStorageSize(int bytes) {

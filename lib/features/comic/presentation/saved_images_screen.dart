@@ -1,6 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../../services/image_download_service.dart';
+
+// File 타입을 조건부로 사용하기 위한 타입 별칭
+import 'dart:io' if (dart.library.html) 'dart:html' as io;
 
 /// 저장된 이미지 관리 화면
 class SavedImagesScreen extends StatefulWidget {
@@ -13,7 +16,7 @@ class SavedImagesScreen extends StatefulWidget {
 class _SavedImagesScreenState extends State<SavedImagesScreen> {
   final ImageDownloadService _imageDownloadService =
       ImageDownloadService.instance;
-  List<File> _savedImages = [];
+  List<dynamic> _savedImages = [];
   bool _isLoading = true;
   int _storageUsage = 0;
 
@@ -34,7 +37,12 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
       final usage = await _imageDownloadService.getStorageUsage();
 
       setState(() {
-        _savedImages = images;
+        // 웹이 아닌 경우에만 File 타입으로 캐스팅
+        if (!kIsWeb) {
+          _savedImages = images.cast<io.File>();
+        } else {
+          _savedImages = [];
+        }
         _storageUsage = usage;
         _isLoading = false;
       });
@@ -55,7 +63,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
   }
 
   /// 이미지 삭제
-  Future<void> _deleteImage(File imageFile) async {
+  Future<void> _deleteImage(dynamic imageFile) async {
     final confirmDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -76,7 +84,10 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
 
     if (confirmDelete == true) {
       try {
-        await _imageDownloadService.deleteSavedImage(imageFile.path);
+        final filePath = kIsWeb ? '' : (imageFile as io.File).path;
+        if (!kIsWeb) {
+          await _imageDownloadService.deleteSavedImage(filePath);
+        }
         await _loadSavedImages(); // 목록 새로고침
 
         if (mounted) {
@@ -101,7 +112,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
   }
 
   /// 이미지 상세 보기
-  void _viewImage(File imageFile) {
+  void _viewImage(dynamic imageFile) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -192,15 +203,19 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                           itemCount: _savedImages.length,
                           itemBuilder: (context, index) {
                             final imageFile = _savedImages[index];
+                            if (kIsWeb || imageFile is! io.File) {
+                              return const SizedBox.shrink();
+                            }
+                            final file = imageFile;
                             return Card(
                               clipBehavior: Clip.antiAlias,
                               child: InkWell(
-                                onTap: () => _viewImage(imageFile),
+                                onTap: () => _viewImage(file),
                                 child: Stack(
                                   children: [
                                     // 이미지
                                     Image.file(
-                                      imageFile,
+                                      file,
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
@@ -233,7 +248,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                             size: 20,
                                           ),
                                           onPressed: () =>
-                                              _deleteImage(imageFile),
+                                              _deleteImage(file),
                                         ),
                                       ),
                                     ),
@@ -257,7 +272,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
                                           ),
                                         ),
                                         child: Text(
-                                          imageFile.path.split('/').last,
+                                          file.path.split('/').last,
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 12,
@@ -283,7 +298,7 @@ class _SavedImagesScreenState extends State<SavedImagesScreen> {
 
 /// 이미지 상세 보기 화면
 class ImageViewerScreen extends StatelessWidget {
-  final File imageFile;
+  final dynamic imageFile;
 
   const ImageViewerScreen({
     super.key,
@@ -294,14 +309,14 @@ class ImageViewerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(imageFile.path.split('/').last),
+        title: Text((imageFile as io.File).path.split('/').last),
         backgroundColor: const Color(0xFF00D884),
         foregroundColor: Colors.white,
       ),
       body: Center(
         child: InteractiveViewer(
           child: Image.file(
-            imageFile,
+            imageFile as io.File,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               return const Center(

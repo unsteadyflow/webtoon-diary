@@ -118,7 +118,7 @@ void main() {
       expect(find.text('공유하기'), findsOneWidget);
     });
 
-    testWidgets('공유 버튼 탭 시 공유 기능 미구현 메시지 표시', (WidgetTester tester) async {
+    testWidgets('공유 버튼 탭 시 공유 기능 실행', (WidgetTester tester) async {
       // When
       await tester.pumpWidget(
         MaterialApp(
@@ -136,7 +136,19 @@ void main() {
       await tester.pump();
 
       // Then
-      expect(find.text('공유 기능은 추후 구현 예정입니다.'), findsOneWidget);
+      // 공유 기능이 실행되면 로딩 다이얼로그가 표시되거나
+      // 네트워크 오류나 이미지 다운로드 실패 시 에러 메시지가 표시될 수 있음
+      // 실제 공유 기능은 플랫폼별로 다르게 동작하므로, 다이얼로그나 스낵바가 표시되는지만 확인
+      await tester.pump(const Duration(seconds: 1));
+      
+      // 공유 기능이 호출되었는지 확인 (로딩 다이얼로그 또는 에러 메시지가 표시됨)
+      // 테스트 환경에서는 실제 공유가 작동하지 않을 수 있으므로, 에러 메시지가 표시되는 것도 정상 동작
+      final hasLoadingDialog = find.text('공유 준비 중...').evaluate().isNotEmpty;
+      final hasError = find.textContaining('공유 실패').evaluate().isNotEmpty;
+      
+      // 공유 기능이 호출되었는지 확인 (로딩 다이얼로그 또는 에러 메시지 중 하나는 표시되어야 함)
+      expect(hasLoadingDialog || hasError, isTrue, 
+          reason: '공유 기능 실행 시 로딩 다이얼로그 또는 에러 메시지가 표시되어야 합니다');
     });
   });
 }

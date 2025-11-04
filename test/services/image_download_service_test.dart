@@ -120,7 +120,12 @@ void main() {
         final savedImages = await imageDownloadService.getSavedImages();
 
         // Then
-        expect(savedImages, isA<List<File>>());
+        // getSavedImages는 List<dynamic>을 반환 (웹에서는 빈 리스트, 비웹에서는 File 리스트)
+        expect(savedImages, isA<List>());
+        // 웹이 아닌 경우에만 File 타입 확인
+        if (savedImages.isNotEmpty) {
+          expect(savedImages.first, isA<File>());
+        }
       });
 
       test('저장 공간 사용량 조회', () async {

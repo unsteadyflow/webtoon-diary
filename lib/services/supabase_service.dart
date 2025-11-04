@@ -75,11 +75,10 @@ class SupabaseService {
       );
       return response;
     } catch (e) {
-      // 상세 에러 정보 로깅
-      debugPrint('Supabase signInWithPassword error:');
-      debugPrint('Error: $e');
-      if (e is AuthException) {
-        debugPrint('AuthException message: ${e.message}');
+      // 에러는 상위 레이어에서 처리됨
+      // 개발 모드에서만 로그 출력
+      if (kDebugMode && e is AuthException) {
+        debugPrint('Supabase signInWithPassword error: ${e.message}');
       }
       rethrow;
     }

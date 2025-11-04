@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/auth_service.dart';
@@ -123,16 +124,18 @@ class AuthProvider extends ChangeNotifier {
 
       return false;
     } catch (e) {
-      // 에러 상세 정보 로깅
-      debugPrint('Sign in error details:');
-      debugPrint('Error: $e');
-      debugPrint('Error type: ${e.runtimeType}');
-
-      if (e is AuthException) {
-        debugPrint('AuthException message: ${e.message}');
+      // 에러 메시지 변환 (콘솔 로그는 최소화)
+      final errorMessage = _getErrorMessage(e);
+      _setError(errorMessage);
+      
+      // 개발 모드에서만 상세 로그 출력
+      if (kDebugMode) {
+        debugPrint('Sign in error: $errorMessage');
+        if (e is AuthException) {
+          debugPrint('AuthException code: ${e.statusCode}');
+        }
       }
-
-      _setError(_getErrorMessage(e));
+      
       return false;
     } finally {
       _setLoading(false);

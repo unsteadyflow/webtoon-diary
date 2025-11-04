@@ -65,17 +65,14 @@ class AuthService {
 
       return response;
     } catch (e) {
-      // ❌ 로그인 실패: $e
-      // 디버깅을 위한 상세 로그
-      if (e is AuthException) {
-        debugPrint('AuthException: ${e.message}');
-        debugPrint('AuthException statusCode: ${e.statusCode}');
-        debugPrint('AuthException code: ${e.statusCode}');
-        
-        // "Invalid login credentials" 오류는 AuthProvider에서 처리
-      } else {
-        debugPrint('Login error: $e');
-        debugPrint('Error type: ${e.runtimeType}');
+      // 로그인 실패 - 에러는 AuthProvider에서 사용자 친화적 메시지로 변환됨
+      // 개발 모드에서만 상세 로그 출력
+      if (kDebugMode) {
+        if (e is AuthException) {
+          debugPrint('AuthException: ${e.message} (statusCode: ${e.statusCode})');
+        } else {
+          debugPrint('Login error: $e');
+        }
       }
       rethrow;
     }
